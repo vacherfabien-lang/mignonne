@@ -768,6 +768,16 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
 .infos-mail{display:inline-flex;align-items:center;gap:.4rem;background:var(--ocean);color:var(--sand-light);text-decoration:none;padding:.7rem 1.1rem;border-radius:3px;font-size:.85rem;font-weight:500}
 .infos-user{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
 .infos-user-name{font-weight:700;color:var(--ocean);font-size:.95rem}
+.err-log{max-height:280px;overflow-y:auto;border:1px solid var(--stone);border-radius:3px;background:#fff}
+.err-none{padding:.9rem;font-size:.78rem;color:var(--slate);font-style:italic}
+.err-row{padding:.5rem .7rem;border-bottom:1px solid rgba(29,43,54,.06)}
+.err-row:last-child{border-bottom:none}
+.err-head{display:flex;gap:.5rem;flex-wrap:wrap;align-items:baseline;font-size:.68rem;margin-bottom:.15rem}
+.err-when{color:var(--slate);font-variant-numeric:tabular-nums}
+.err-v{background:var(--stone);color:var(--ink-soft);border-radius:100px;padding:0 .4rem;font-weight:600}
+.err-who{color:var(--slate);margin-left:auto}
+.err-msg{font-size:.74rem;color:var(--coral);font-family:ui-monospace,monospace;line-height:1.4;word-break:break-word}
+.err-loc{font-size:.68rem;color:var(--slate);font-family:ui-monospace,monospace;margin-top:.1rem}
 .changelog{margin-top:.2rem}
 .chg{border-left:2px solid var(--stone);padding:.1rem 0 .8rem .8rem;margin-bottom:.2rem}
 .chg-cur{border-left-color:var(--ocean)}
@@ -1228,6 +1238,27 @@ textarea.form-control{resize:vertical;min-height:62px}
     </div>
 
     <div class="infos-card">
+      <h3 class="infos-h">Mesure d'audience</h3>
+      <p class="infos-p">
+        La fréquentation du site est mesurée par Cloudflare Web Analytics :
+        pages consultées, provenance, type d'appareil. <strong>Sans cookie et
+        sans identification</strong> — personne n'est suivi individuellement,
+        et aucune donnée de l'application n'est transmise.
+      </p>
+    </div>
+
+    <div class="infos-card">
+      <h3 class="infos-h">Journal des erreurs</h3>
+      <p class="infos-p">
+        Les erreurs rencontrées par n'importe quel appareil de la famille sont
+        consignées ici, avec la version et le prénom concernés. Pratique pour
+        signaler un problème sans avoir à décrire ce qui s'est passé.
+      </p>
+      <div id="infosErrors" class="err-log"></div>
+      <button class="btn btn-secondary" onclick="clearErrLog()" style="margin-top:.7rem">Effacer le journal</button>
+    </div>
+
+    <div class="infos-card">
       <h3 class="infos-h">Versions publiées</h3>
       <div id="infosChangelog" class="changelog"></div>
       <p class="infos-note">
@@ -1512,7 +1543,7 @@ textarea.form-control{resize:vertical;min-height:62px}
 // FIREBASE — stockage partagé temps réel
 // ══════════════════════════════
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, set, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD_bPXVuY0qzm0AVWv8wfIggvGkWp3Z4ks",
@@ -3045,8 +3076,15 @@ async function onQuickPhotoSelected(ev){
 // ══════════════════════════════
 // ONGLET INFOS : versions publiées et contact
 // ══════════════════════════════
-const APP_VERSION = 'v22';
+const APP_VERSION = 'v24';
 const CHANGELOG = [
+  { v:'v24', date:'13 septembre 2026', items:[
+      "Mesure d'audience Cloudflare activée, sans cookie ni suivi individuel."
+  ]},
+  { v:'v23', date:'13 septembre 2026', items:[
+      "Nouveau journal des erreurs dans l'onglet Infos : les problèmes rencontrés par n'importe quel appareil y remontent automatiquement.",
+      "Les écritures dans la base sont devenues ciblées, sans réécrire les données voisines."
+  ]},
   { v:'v22', date:'13 septembre 2026', items:[
       "Vue Liste allégée : le nom passe en tête, les dates et la durée tiennent sur une seule ligne, les filtres ne prennent plus qu'une rangée.",
       "Historique regroupé par journée : la date n'est plus répétée à chaque ligne."
@@ -3140,6 +3178,7 @@ const CHANGELOG = [
 })();
 
 function renderInfos(){
+  renderErrLog();
   const u = document.getElementById('infosUserName');
   if(u) u.textContent = userName || 'non renseigné';
   const c = document.getElementById('infosChangelog');
@@ -3209,6 +3248,9 @@ async function loadBonsPlans(){
       ? Object.values(v.bonsplans).filter(x=>x && typeof x==='object' && x.id)
       : [];
     if(v && v.marees && typeof v.marees==='object') mareesExtra = v.marees;
+    if(v && v.errors && typeof v.errors==='object'){
+      errLog = Object.values(v.errors).filter(x=>x && x.ts).sort((a,b)=>a.ts-b.ts);
+    }
   }catch(e){
     console.error('Firebase bons plans load error:', e);
     bonsPlans = [];
@@ -3231,10 +3273,9 @@ async function saveBonsPlans(){
   try{
     const bp = {};
     bonsPlans.forEach(p=>{ bp[p.id] = p; });
-    // On reecrit le noeud entier : il faut donc preserver les marees.
-    const payload = { _pass: FAMILY_PASS, bonsplans: bp };
-    if(mareesExtra && Object.keys(mareesExtra).length) payload.marees = mareesExtra;
-    await set(infosRef, payload);
+    // update() ne touche qu'aux clés fournies : marées et journal d'erreurs,
+    // qui vivent dans le même nœud, restent intacts.
+    await update(infosRef, { _pass: FAMILY_PASS, bonsplans: bp });
   }catch(e){
     console.error('Firebase bons plans save error:', e);
     toast('Erreur de sauvegarde — vérifiez votre connexion');
@@ -3652,6 +3693,85 @@ async function downloadRecettesPdf(){
   }
 }
 
+
+// ══════════════════════════════
+// JOURNAL DES ERREURS
+// Cloudflare mesure l'audience mais ne voit pas les erreurs JavaScript.
+// On les consigne donc nous-memes, pour pouvoir les consulter a distance
+// depuis l'onglet Infos plutot que de dependre de la console de chacun.
+// ══════════════════════════════
+let errLog = [];
+const ERR_MAX = 30;
+let lastErrWrite = 0;
+let lastErrKey = '';
+
+async function logError(msg, src, ligne){
+  try{
+    const cle = String(msg).slice(0,120) + '@' + ligne;
+    const now = Date.now();
+    // On evite les doublons rapproches : une erreur dans une boucle de rendu
+    // peut se repeter des dizaines de fois par seconde.
+    if(cle === lastErrKey && now - lastErrWrite < 30000) return;
+    lastErrKey = cle; lastErrWrite = now;
+
+    const nav = navigator.userAgent || '';
+    const appareil = /Android/i.test(nav) ? 'Android'
+                   : /iPhone|iPad/i.test(nav) ? 'iOS'
+                   : /Mac/i.test(nav) ? 'Mac' : /Windows/i.test(nav) ? 'Windows' : 'autre';
+    errLog.push({
+      ts: now,
+      v: APP_VERSION,
+      qui: userName || '?',
+      appareil: appareil,
+      msg: String(msg).slice(0,200),
+      ou: (String(src||'').split('/').pop() || '') + (ligne ? ':'+ligne : '')
+    });
+    if(errLog.length > ERR_MAX) errLog = errLog.slice(-ERR_MAX);
+    const obj = {};
+    errLog.forEach((e,i)=>{ obj['e_'+e.ts+'_'+i] = e; });
+    await update(infosRef, { _pass: FAMILY_PASS, errors: obj });
+  }catch(e){
+    // Un echec d'enregistrement ne doit jamais aggraver la situation
+    console.warn('logError:', e);
+  }
+}
+
+window.addEventListener('error', (ev)=>{
+  logError(ev.message || 'Erreur inconnue', ev.filename, ev.lineno);
+});
+window.addEventListener('unhandledrejection', (ev)=>{
+  const r = ev.reason;
+  logError('Promesse rejetee : ' + ((r && r.message) ? r.message : String(r)), '', 0);
+});
+
+function renderErrLog(){
+  const c = document.getElementById('infosErrors');
+  if(!c) return;
+  if(!errLog.length){
+    c.innerHTML = '<div class="err-none">Aucune erreur enregistrée. Tout va bien.</div>';
+    return;
+  }
+  const p2 = n => String(n).padStart(2,'0');
+  c.innerHTML = errLog.slice().reverse().map(e=>{
+    const d = new Date(e.ts);
+    return '<div class="err-row"><div class="err-head">'
+      + '<span class="err-when">' + p2(d.getDate()) + '/' + p2(d.getMonth()+1) + ' ' + p2(d.getHours()) + ':' + p2(d.getMinutes()) + '</span>'
+      + '<span class="err-v">' + escTxt(e.v||'?') + '</span>'
+      + '<span class="err-who">' + escTxt(e.qui||'?') + ' · ' + escTxt(e.appareil||'?') + '</span>'
+      + '</div><div class="err-msg">' + escTxt(e.msg||'') + '</div>'
+      + (e.ou ? '<div class="err-loc">' + escTxt(e.ou) + '</div>' : '')
+      + '</div>';
+  }).join('');
+}
+
+async function clearErrLog(){
+  if(!(await askConfirm("Effacer le journal des erreurs ?", {title:'Journal des erreurs', yes:'Effacer', danger:true}))) return;
+  errLog = [];
+  try{ await update(infosRef, { _pass: FAMILY_PASS, errors: null }); }catch(e){ console.warn(e); }
+  renderErrLog();
+  toast('Journal effacé');
+}
+
 // (nécessaire car le script est un module ES)
 // ══════════════════════════════
 // Enregistrement automatique : on ecoute la saisie dans les 4 champs
@@ -3678,6 +3798,7 @@ document.addEventListener('visibilitychange', ()=>{
 });
 
 window.renderInfos = renderInfos;
+window.clearErrLog = clearErrLog;
 window.downloadRecettesPdf = downloadRecettesPdf;
 window.forceReload = forceReload;
 window.checkForUpdate = checkForUpdate;
@@ -4316,5 +4437,11 @@ load();
     </div>
   </div>
 </div>
+<!-- Cloudflare Web Analytics — mesure d'audience sans cookie.
+     Le jeton est un identifiant public, visible dans le code de toute page
+     qui l'utilise : il n'a pas a etre protege. -->
+<script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0f50cbdae92f46408aa1244045e6b026"}'></script>
+<!-- End Cloudflare Web Analytics -->
+
 </body>
 </html>
