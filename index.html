@@ -156,7 +156,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
   border-bottom:1px solid var(--line-strong);
 }
 .cal-head-cell{
-  font-size:.55rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
   color:var(--slate);text-align:center;
   padding:.3rem .1rem;
   border-right:1px solid var(--line);
@@ -230,10 +230,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
    réservés aux vacances scolaires et jours fériés, pour éviter que
    trois systèmes de couleur se superposent. */
 .cal-cell .tide-bar{
-  position:absolute;left:0;bottom:0;height:2px;
-  pointer-events:none;border-radius:0 2px 0 0;opacity:.9;
+  position:absolute;left:50%;bottom:0;
+  width:58%;max-width:22px;transform:translateX(-50%);
+  pointer-events:none;border-radius:2px 2px 0 0;opacity:.55;
 }
-.cal-grid.big .cal-cell .tide-bar{height:3px}
+.cal-grid.big .cal-cell .tide-bar{width:62%;max-width:40px;opacity:.5}
 .cal-cell .tide-bar.tide-1{background:#cabfa6}
 .cal-cell .tide-bar.tide-2{background:#a9c2cd}
 .cal-cell .tide-bar.tide-3{background:#5a8ba0}
@@ -242,13 +243,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
 
 /* Chiffre du coef en HAUT à droite (pour ne pas être masqué par les bandes de séjour) */
 .cal-cell .tide-coef{
-  position:absolute;top:2px;right:3px;
-  font-size:.45rem;font-weight:600;font-family:'Inter',sans-serif;
+  position:absolute;top:2px;right:3px;z-index:2;
+  font-size:.6rem;font-weight:600;font-family:'Inter',sans-serif;
   color:var(--ink-soft);opacity:.7;line-height:1;pointer-events:none;
   letter-spacing:-.02em;
 }
 .cal-grid.big .cal-cell .tide-coef{
-  top:4px;right:6px;font-size:.55rem;
+  top:4px;right:6px;font-size:.7rem;
 }
 /* Le chiffre n'apparaît que sur les marées notables : il est donc
    toujours mis en avant. */
@@ -258,11 +259,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
 
 /* Numéro petit, en haut à gauche, discret */
 .day-num-sm{
-  font-size:.6rem;
-  color:var(--slate);
+  font-size:.68rem;
+  color:var(--ink-soft);
   line-height:1;
   font-weight:500;
-  opacity:.75;
+  opacity:1;
   pointer-events:none;
 }
 .day-num-sm.ferie-mark{color:var(--coral);font-weight:700;opacity:1}
@@ -282,7 +283,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
   justify-content:center;
   padding:0 6px;
   color:white;
-  font-size:.65rem;
+  font-size:.72rem;
   font-weight:600;
   letter-spacing:.01em;
   pointer-events:auto;
@@ -643,7 +644,27 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
   object-fit:cover;border-radius:4px;cursor:zoom-in;
   border:1px solid var(--line);
 }
-.modal-rec-read /* ── BONS PLANS ── */
+.modal-rec-read .welcome-p{font-size:.88rem;color:var(--ink-soft);line-height:1.55;margin:0 0 1rem}
+.welcome-note{font-size:.72rem;color:var(--slate);font-style:italic;margin:.2rem 0 0}
+.modal-confirm{max-width:400px}
+.confirm-p{font-size:.92rem;color:var(--ink-soft);line-height:1.55;margin:.2rem 0 .6rem}
+.maree-warn{background:rgba(200,133,46,.12);border:1px solid #b8862e;color:#8a6520;border-radius:3px;padding:.5rem .75rem;font-size:.76rem;margin-bottom:.7rem;line-height:1.45}
+.upd-banner{
+  position:fixed;left:50%;bottom:16px;transform:translateX(-50%);
+  z-index:400;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;
+  background:var(--ink);color:var(--sand-light);
+  padding:.7rem 1rem;border-radius:4px;
+  box-shadow:0 6px 24px rgba(29,43,54,.35);
+  font-size:.8rem;max-width:92vw;
+  animation:slideUp .3s ease;
+}
+.upd-banner button{
+  background:var(--sand-light);color:var(--ink);border:none;
+  padding:.45rem .9rem;border-radius:3px;font-size:.76rem;font-weight:600;
+  font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;
+}
+
+/* ── BONS PLANS ── */
 .bp-bar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.7rem}
 .bp-switch{display:inline-flex;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden}
 .bp-sw{background:var(--sand-light);border:none;padding:.5rem .9rem;font-size:.76rem;font-family:'Inter',sans-serif;color:var(--ink-soft);cursor:pointer}
@@ -837,21 +858,21 @@ textarea.form-control{resize:vertical;min-height:62px}
   .month-nights{font-size:.62rem}
   /* Cellules vue Année en mobile : compactes mais utilisables */
   .cal-grid{grid-auto-rows:32px}
-  .cal-head-cell{font-size:.55rem;padding:.25rem .1rem}
+  .cal-head-cell{font-size:.62rem;padding:.25rem .1rem}
   .cal-cell{padding:1px 2px}
-  .day-num-sm{font-size:.62rem;opacity:.85}
+  .day-num-sm{font-size:.7rem;opacity:1}
   /* Bandes de séjour : plus petites en vue Année mobile */
-  .cal-band{font-size:.5rem;padding:0 2px;letter-spacing:-.02em}
+  .cal-band{font-size:.64rem;padding:0 3px;letter-spacing:0}
 
   /* VUE MOIS — 1 colonne avec cellules confortables */
   .cal-grid.big{grid-auto-rows:60px}
-  .cal-grid.big .day-num-sm{font-size:.78rem;opacity:1}
+  .cal-grid.big .day-num-sm{font-size:.88rem;opacity:1}
   .cal-grid.big ~ .cal-bands .cal-band,
   .cal-grid.big + .cal-bands .cal-band{font-size:.7rem;height:22px}
 
   /* Coef marée */
-  .cal-cell .tide-coef{font-size:.45rem;top:1px;right:2px}
-  .cal-grid.big .cal-cell .tide-coef{font-size:.58rem;top:3px;right:4px}
+  .cal-cell .tide-coef{font-size:.58rem;top:1px;right:2px}
+  .cal-grid.big .cal-cell .tide-coef{font-size:.7rem;top:3px;right:4px}
 
   /* Sticky header */
   .sticky-header{padding-bottom:.2rem}
@@ -925,11 +946,11 @@ textarea.form-control{resize:vertical;min-height:62px}
   .year-grid{gap:.5rem}
   .cal-grid{grid-auto-rows:28px}
   .cal-grid.big{grid-auto-rows:54px}
-  .cal-head-cell{font-size:.5rem}
-  .day-num-sm{font-size:.58rem}
-  .cal-band{font-size:.45rem}
-  .month-name-lbl{font-size:.85rem}
-  .month-nights{font-size:.58rem}
+  .cal-head-cell{font-size:.58rem}
+  .day-num-sm{font-size:.66rem}
+  .cal-band{font-size:.6rem}
+  .month-name-lbl{font-size:.9rem}
+  .month-nights{font-size:.64rem}
   .rec-grid{grid-template-columns:1fr}
 }
 
@@ -947,6 +968,7 @@ textarea.form-control{resize:vertical;min-height:62px}
   transition:all .15s ease;
 }
 .btn-download-pdf:hover{background:var(--ocean);color:white}
+.btn-download-pdf[disabled]{opacity:.55;cursor:wait}
 @media(max-width:540px){
   .btn-download-pdf{font-size:.7rem;padding:.45rem .75rem}
 }
@@ -1013,14 +1035,14 @@ textarea.form-control{resize:vertical;min-height:62px}
     <h1 class="title">Mignonne</h1>
   </div>
   <!-- Onglets principaux -->
-  <nav class="tabs tabs-main">
+  <nav class="tabs tabs-main" role="tablist" aria-label="Sections">
     <button class="tab-main active" data-section="resa">Réservations</button>
     <button class="tab-main" data-section="rec">Recettes de famille</button>
     <button class="tab-main" data-section="plans">Bons plans</button>
     <button class="tab-main" data-section="infos">Infos</button>
   </nav>
   <!-- Sous-onglets de Réservations -->
-  <nav class="tabs tabs-sub" id="subtabs-resa">
+  <nav class="tabs tabs-sub" id="subtabs-resa" role="tablist" aria-label="Vues des réservations">
     <button class="tab active" data-view="year">Année</button>
     <button class="tab" data-view="month">Mois</button>
     <button class="tab" data-view="list">Liste</button>
@@ -1063,7 +1085,7 @@ textarea.form-control{resize:vertical;min-height:62px}
 </div>
 
 <!-- MODAL ZONES (pop-up info académies) -->
-<div class="modal-backdrop" id="modalZones" onclick="if(event.target.id==='modalZones')closeZonesModal()">
+<div class="modal-backdrop" role="dialog" aria-modal="true" id="modalZones" onclick="if(event.target.id==='modalZones')closeZonesModal()">
   <div class="modal modal-zones">
     <div class="modal-handle"></div>
     <h2 class="modal-title">Zones de vacances scolaires</h2>
@@ -1079,6 +1101,7 @@ textarea.form-control{resize:vertical;min-height:62px}
 
 <!-- VUE ANNÉE -->
 <section class="view active" id="view-year">
+  <div id="mareeWarnYear"></div>
   <div class="year-nav">
     <button class="nav-btn" onclick="navYear(-1)">‹</button>
     <div class="year-lbl" id="currentYear"></div>
@@ -1089,6 +1112,7 @@ textarea.form-control{resize:vertical;min-height:62px}
 
 <!-- VUE MOIS -->
 <section class="view" id="view-month">
+  <div id="mareeWarnMonth"></div>
   <div class="month-nav">
     <button class="nav-btn" onclick="navMonth(-1)">‹</button>
     <div class="current-month" id="currentMonth"></div>
@@ -1213,7 +1237,7 @@ textarea.form-control{resize:vertical;min-height:62px}
       <select class="rec-author-select" id="recAuthorSelect" onchange="renderRecettes()">
         <option value="">Tous les auteurs</option>
       </select>
-      <a href="Recettes_famille_Mignonne.pdf" download class="btn-download-pdf" title="Télécharger le livre de recettes au format PDF" style="margin-left:auto">📄 Télécharger recettes en or (avril 2026)</a>
+      <button type="button" id="btnRecPdf" class="btn-download-pdf" title="Générer un PDF de toutes les recettes, avec les photos" style="margin-left:auto" onclick="downloadRecettesPdf()">📄 Télécharger le livre en PDF</button>
       <button class="btn-add" onclick="openRecNew()"><span class="plus">+</span> Nouvelle recette</button>
     </div>
     <div class="rec-filters" id="recFilters"></div>
@@ -1222,7 +1246,7 @@ textarea.form-control{resize:vertical;min-height:62px}
 </section>
 
 <!-- MODAL LECTURE RECETTE -->
-<div class="modal-backdrop" id="modalRecRead" onclick="if(event.target.id==='modalRecRead')closeRecRead()">
+<div class="modal-backdrop" role="dialog" aria-modal="true" id="modalRecRead" onclick="if(event.target.id==='modalRecRead')closeRecRead()">
   <div class="modal modal-rec-read">
     <div class="modal-handle"></div>
     <div id="recReadBody"></div>
@@ -1233,7 +1257,7 @@ textarea.form-control{resize:vertical;min-height:62px}
 </div>
 
 <!-- MODAL AJOUT/ÉDITION RECETTE -->
-<div class="modal-backdrop" id="modalRecEdit" onclick="if(event.target.id==='modalRecEdit')closeRecEdit()">
+<div class="modal-backdrop" role="dialog" aria-modal="true" id="modalRecEdit" onclick="if(event.target.id==='modalRecEdit')closeRecEdit()">
   <div class="modal modal-rec-edit">
     <div class="modal-handle"></div>
     <h2 class="modal-title" id="recEditTitle">Nouvelle recette</h2>
@@ -1269,8 +1293,42 @@ textarea.form-control{resize:vertical;min-height:62px}
   </div>
 </div>
 
-<div class="modal" id="modalBp">
-  <div class="modal-content">
+<!-- MODALE D'ACCUEIL : prénom demandé une seule fois par appareil -->
+<div class="modal-backdrop" role="dialog" aria-modal="true" id="modalWelcome">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title" id="welcomeTitle">Bienvenue sur Mignonne</h2>
+    <p class="welcome-p" id="welcomeText">
+      Comment t'appelles-tu ? Ton prénom signera tes réservations, tes recettes
+      et tes bons plans, pour que toute la famille sache qui a fait quoi.
+    </p>
+    <div class="form-group">
+      <label class="form-label">Ton prénom</label>
+      <input type="text" class="form-control" id="welcomeInput" placeholder="Ex : Michèle" autocomplete="given-name" maxlength="30" onkeydown="if(event.key==='Enter')saveWelcomeName()">
+    </div>
+    <p class="welcome-note">Mémorisé sur cet appareil uniquement. Modifiable à tout moment dans l'onglet Infos.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="welcomeSkip" onclick="skipWelcome()">Plus tard</button>
+      <button class="btn btn-primary" onclick="saveWelcomeName()">C'est moi</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALE DE CONFIRMATION : remplace les boîtes système -->
+<div class="modal-backdrop" role="dialog" aria-modal="true" id="modalConfirm">
+  <div class="modal modal-confirm">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title" id="confirmTitle">Confirmer</h2>
+    <p class="confirm-p" id="confirmText"></p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="confirmNo">Annuler</button>
+      <button class="btn btn-primary" id="confirmYes">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" role="dialog" aria-modal="true" id="modalBp" onclick="if(event.target.id==='modalBp')closeBp()">
+  <div class="modal">
     <div class="modal-handle"></div>
     <h2 class="modal-title" id="bpModalTitle">Nouveau bon plan</h2>
     <div class="form-group"><label class="form-label">Nom</label>
@@ -1317,7 +1375,7 @@ textarea.form-control{resize:vertical;min-height:62px}
 </div>
 
 <!-- MODAL NOUVEAU -->
-<div class="modal-backdrop" id="modalNew">
+<div class="modal-backdrop" role="dialog" aria-modal="true" id="modalNew">
   <div class="modal">
     <div class="modal-handle"></div>
     <h2 class="modal-title">Nouveau séjour</h2>
@@ -1343,7 +1401,7 @@ textarea.form-control{resize:vertical;min-height:62px}
 </div>
 
 <!-- MODAL ÉDITION -->
-<div class="modal-backdrop" id="modal">
+<div class="modal-backdrop" role="dialog" aria-modal="true" id="modal">
   <div class="modal">
     <div class="modal-handle"></div>
     <h2 class="modal-title">Modifier le séjour</h2>
@@ -1480,7 +1538,11 @@ const VAC_ZONES={
 // Source : Météo Consult Marine / SHOM 2026
 // Couvre fév-déc 2026 (335 jours). Pour les dates hors plage : retourne null.
 const MAREES = {"2026-02-01":89,"2026-02-02":97,"2026-02-03":99,"2026-02-04":99,"2026-02-05":94,"2026-02-06":84,"2026-02-07":73,"2026-02-08":59,"2026-02-09":46,"2026-02-10":33,"2026-02-11":28,"2026-02-12":28,"2026-02-13":39,"2026-02-14":52,"2026-02-15":65,"2026-02-16":77,"2026-02-17":87,"2026-02-18":94,"2026-02-19":97,"2026-02-20":97,"2026-02-21":94,"2026-02-22":86,"2026-02-23":74,"2026-02-24":60,"2026-02-25":46,"2026-02-26":41,"2026-02-27":47,"2026-02-28":62,"2026-03-01":78,"2026-03-02":90,"2026-03-03":97,"2026-03-04":99,"2026-03-05":99,"2026-03-06":94,"2026-03-07":86,"2026-03-08":75,"2026-03-09":62,"2026-03-10":48,"2026-03-11":34,"2026-03-12":23,"2026-03-13":23,"2026-03-14":35,"2026-03-15":50,"2026-03-16":66,"2026-03-17":80,"2026-03-18":92,"2026-03-19":101,"2026-03-20":104,"2026-03-21":104,"2026-03-22":100,"2026-03-23":89,"2026-03-24":74,"2026-03-25":57,"2026-03-26":43,"2026-03-27":39,"2026-03-28":49,"2026-03-29":63,"2026-03-30":77,"2026-03-31":86,"2026-04-01":92,"2026-04-02":93,"2026-04-03":93,"2026-04-04":89,"2026-04-05":82,"2026-04-06":73,"2026-04-07":62,"2026-04-08":50,"2026-04-09":37,"2026-04-10":27,"2026-04-11":26,"2026-04-12":35,"2026-04-13":50,"2026-04-14":66,"2026-04-15":81,"2026-04-16":93,"2026-04-17":101,"2026-04-18":105,"2026-04-19":104,"2026-04-20":99,"2026-04-21":88,"2026-04-22":73,"2026-04-23":58,"2026-04-24":51,"2026-04-25":44,"2026-04-26":51,"2026-04-27":61,"2026-04-28":71,"2026-04-29":77,"2026-04-30":81,"2026-05-01":82,"2026-05-02":82,"2026-05-03":80,"2026-05-04":76,"2026-05-05":69,"2026-05-06":62,"2026-05-07":53,"2026-05-08":44,"2026-05-09":37,"2026-05-10":35,"2026-05-11":40,"2026-05-12":51,"2026-05-13":64,"2026-05-14":77,"2026-05-15":88,"2026-05-16":96,"2026-05-17":99,"2026-05-18":99,"2026-05-19":95,"2026-05-20":87,"2026-05-21":76,"2026-05-22":64,"2026-05-23":59,"2026-05-24":52,"2026-05-25":51,"2026-05-26":55,"2026-05-27":60,"2026-05-28":65,"2026-05-29":68,"2026-05-30":70,"2026-05-31":71,"2026-06-01":71,"2026-06-02":70,"2026-06-03":68,"2026-06-04":64,"2026-06-05":59,"2026-06-06":54,"2026-06-07":50,"2026-06-08":48,"2026-06-09":47,"2026-06-10":52,"2026-06-11":60,"2026-06-12":69,"2026-06-13":79,"2026-06-14":87,"2026-06-15":93,"2026-06-16":95,"2026-06-17":94,"2026-06-18":90,"2026-06-19":83,"2026-06-20":74,"2026-06-21":69,"2026-06-22":59,"2026-06-23":51,"2026-06-24":47,"2026-06-25":47,"2026-06-26":54,"2026-06-27":56,"2026-06-28":61,"2026-06-29":65,"2026-06-30":69,"2026-07-01":71,"2026-07-02":72,"2026-07-03":72,"2026-07-04":70,"2026-07-05":68,"2026-07-06":64,"2026-07-07":61,"2026-07-08":56,"2026-07-09":52,"2026-07-10":53,"2026-07-11":60,"2026-07-12":70,"2026-07-13":81,"2026-07-14":90,"2026-07-15":96,"2026-07-16":98,"2026-07-17":97,"2026-07-18":91,"2026-07-19":81,"2026-07-20":69,"2026-07-21":63,"2026-07-22":50,"2026-07-23":40,"2026-07-24":37,"2026-07-25":40,"2026-07-26":48,"2026-07-27":57,"2026-07-28":65,"2026-07-29":72,"2026-07-30":78,"2026-07-31":82,"2026-08-01":83,"2026-08-02":83,"2026-08-03":80,"2026-08-04":74,"2026-08-05":66,"2026-08-06":61,"2026-08-07":52,"2026-08-08":46,"2026-08-09":48,"2026-08-10":59,"2026-08-11":74,"2026-08-12":87,"2026-08-13":97,"2026-08-14":102,"2026-08-15":101,"2026-08-16":95,"2026-08-17":84,"2026-08-18":71,"2026-08-19":57,"2026-08-20":49,"2026-08-21":36,"2026-08-22":27,"2026-08-23":28,"2026-08-24":38,"2026-08-25":51,"2026-08-26":63,"2026-08-27":74,"2026-08-28":83,"2026-08-29":89,"2026-08-30":93,"2026-08-31":93,"2026-09-01":89,"2026-09-02":81,"2026-09-03":69,"2026-09-04":55,"2026-09-05":48,"2026-09-06":41,"2026-09-07":45,"2026-09-08":60,"2026-09-09":76,"2026-09-10":90,"2026-09-11":101,"2026-09-12":102,"2026-09-13":100,"2026-09-14":93,"2026-09-15":83,"2026-09-16":70,"2026-09-17":56,"2026-09-18":41,"2026-09-19":28,"2026-09-20":24,"2026-09-21":24,"2026-09-22":35,"2026-09-23":50,"2026-09-24":64,"2026-09-25":77,"2026-09-26":87,"2026-09-27":95,"2026-09-28":99,"2026-09-29":98,"2026-09-30":92,"2026-10-01":82,"2026-10-02":68,"2026-10-03":53,"2026-10-04":46,"2026-10-05":43,"2026-10-06":55,"2026-10-07":70,"2026-10-08":83,"2026-10-09":91,"2026-10-10":95,"2026-10-11":95,"2026-10-12":93,"2026-10-13":88,"2026-10-14":79,"2026-10-15":68,"2026-10-16":56,"2026-10-17":43,"2026-10-18":32,"2026-10-19":28,"2026-10-20":29,"2026-10-21":41,"2026-10-22":55,"2026-10-23":69,"2026-10-24":82,"2026-10-25":92,"2026-10-26":98,"2026-10-27":100,"2026-10-28":99,"2026-10-29":93,"2026-10-30":82,"2026-10-31":69,"2026-11-01":56,"2026-11-02":47,"2026-11-03":48,"2026-11-04":56,"2026-11-05":66,"2026-11-06":75,"2026-11-07":81,"2026-11-08":84,"2026-11-09":84,"2026-11-10":83,"2026-11-11":80,"2026-11-12":74,"2026-11-13":67,"2026-11-14":58,"2026-11-15":49,"2026-11-16":41,"2026-11-17":35,"2026-11-18":35,"2026-11-19":41,"2026-11-20":51,"2026-11-21":64,"2026-11-22":76,"2026-11-23":86,"2026-11-24":93,"2026-11-25":97,"2026-11-26":97,"2026-11-27":94,"2026-11-28":86,"2026-11-29":76,"2026-11-30":66,"2026-12-01":58,"2026-12-02":55,"2026-12-03":53,"2026-12-04":57,"2026-12-05":62,"2026-12-06":66,"2026-12-07":70,"2026-12-08":73,"2026-12-09":74,"2026-12-10":74,"2026-12-11":72,"2026-12-12":69,"2026-12-13":65,"2026-12-14":60,"2026-12-15":55,"2026-12-16":49,"2026-12-17":45,"2026-12-18":44,"2026-12-19":48,"2026-12-20":55,"2026-12-21":66,"2026-12-22":77,"2026-12-23":87,"2026-12-24":95,"2026-12-25":99,"2026-12-26":99,"2026-12-27":96,"2026-12-28":89,"2026-12-29":78,"2026-12-30":67,"2026-12-31":61};
-function getTide(iso){ return MAREES[iso] != null ? MAREES[iso] : null; }
+// Marees complementaires chargees depuis Firebase (noeud infos/marees).
+// Permet d'ajouter une annee sans republier l'application.
+let mareesExtra = {};
+function getTide(iso){
+  if(mareesExtra && mareesExtra[iso] != null) return mareesExtra[iso]; return MAREES[iso] != null ? MAREES[iso] : null; }
 function tideClass(coef){
   if(coef==null) return '';
   if(coef<45) return 'tide-1';
@@ -1490,11 +1552,12 @@ function tideClass(coef){
   return 'tide-5';
 }
 function tideLabel(coef){ return coef==null ? '' : ('coef '+coef); }
-// Largeur de la jauge de maree : les coefficients vont de 20 a ~120
+// Hauteur de la barre de maree : les coefficients vont de 20 a ~120.
+// Barres verticales cote a cote : leur sommet dessine la houle du mois.
 function tideWidth(coef){
   if(coef==null) return '0%';
   const pct = Math.round(((coef - 20) / 100) * 100);
-  return Math.max(10, Math.min(100, pct)) + '%';
+  return Math.max(8, Math.min(100, pct)) + '%';
 }
 
 const SEED=[
@@ -1803,9 +1866,14 @@ window.closeJackpot = closeJackpot;
 // Bascule entre la section "Réservations" et la section "Recettes"
 function switchSection(section){
   cancelSel();
+  // Securite : aucune modale ne doit survivre a un changement d'onglet
+  document.querySelectorAll('.modal-backdrop.show').forEach(m=>m.classList.remove('show'));
   // Onglets principaux
   document.querySelectorAll('.tab-main').forEach(t=>{
-    t.classList.toggle('active', t.dataset.section===section);
+    const on = t.dataset.section===section;
+    t.classList.toggle('active', on);
+    t.setAttribute('role','tab');
+    t.setAttribute('aria-selected', on ? 'true' : 'false');
   });
   // Sous-onglets : visibles seulement pour resa
   document.getElementById('subtabs-resa').classList.toggle('show', section==='resa');
@@ -1855,6 +1923,17 @@ function updateDisplayToggles(view){
   const dt=document.getElementById('displayToggles');
   if(dt) dt.style.display = VIEWS_WITH_CALTOOLS.includes(view) ? '' : 'none';
 }
+
+// Prévient quand les marées ne couvrent pas l'année affichée, au lieu de
+// laisser un calque vide sans explication.
+function mareeCoverageNote(annee){
+  if(!showMaree) return '';
+  const has = Object.keys(MAREES).some(k=>k.startsWith(annee+'-'))
+           || Object.keys(mareesExtra||{}).some(k=>k.startsWith(annee+'-'));
+  if(has) return '';
+  return '<div class="maree-warn">Coefficients de marée non disponibles pour '+annee
+       + ' — les données officielles du SHOM ne sont pas encore publiées.</div>';
+}
 document.querySelectorAll('#subtabs-resa .tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
     cancelSel();
@@ -1874,8 +1953,14 @@ document.querySelectorAll('#subtabs-resa .tab').forEach(tab=>{
   });
 });
 
-// Au démarrage : section "Réservations" active
+// Au démarrage : section "Réservations", vue Mois.
+// La vue Année reste accessible d'un onglet, mais Mois est la vue de lecture :
+// c'est celle qui reste confortable sur un téléphone.
 switchSection('resa');
+(function(){
+  const monthTab = document.querySelector('#subtabs-resa .tab[data-view="month"]');
+  if(monthTab) monthTab.click();
+})();
 
 window.addEventListener('scroll',()=>{
   document.getElementById('stickyHeader').classList.toggle('scrolled',window.scrollY>30);
@@ -1890,6 +1975,8 @@ function render(){buildVacSet();renderYear();renderMonth();renderList();renderHi
 // VUE ANNÉE — grille uniforme + overlay des bandes
 // ══════════════════════════════
 function renderYear(){
+  const wY=document.getElementById('mareeWarnYear');
+  if(wY) wY.innerHTML = mareeCoverageNote(String(curYear));
   const grid=document.getElementById('yearGrid');
   grid.innerHTML='';
   document.getElementById('currentYear').textContent=curYearView;
@@ -1950,7 +2037,7 @@ function renderYear(){
         if(tY!=null){
           const tb=document.createElement('div');
           tb.className='tide-bar '+tideClass(tY);
-          tb.style.width=tideWidth(tY);
+          tb.style.height=tideWidth(tY);
           cell.appendChild(tb);
           if(tY>=mareeMin){
             const tc=document.createElement('div');
@@ -2119,6 +2206,8 @@ window.addEventListener('resize',()=>{
 // VUE MOIS
 // ══════════════════════════════
 function renderMonth(){
+  const wM=document.getElementById('mareeWarnMonth');
+  if(wM) wM.innerHTML = mareeCoverageNote(String(curYear));
   document.getElementById('currentMonth').textContent=MFR[curMonthIdx]+' '+curYearMonth;
   const card=document.getElementById('monthCard');
   card.innerHTML='';
@@ -2181,7 +2270,7 @@ function renderMonth(){
     if(showMaree && coef!=null){
       const tb=document.createElement('div');
       tb.className='tide-bar '+tideClass(coef);
-      tb.style.width=tideWidth(coef);
+      tb.style.height=tideWidth(coef);
       cell.appendChild(tb);
       if(coef>=mareeMin){
         const tc=document.createElement('div');
@@ -2283,17 +2372,17 @@ function updateNewDatesInfo(){
   info.style.color='';
   info.textContent=`${fmtL(s)} → ${fmtL(e)} · ${n} nuit${n>1?'s':''}`;
 }
-function openNewModal(s,e){
+async function openNewModal(s,e){
   newS=s;newE=e;
   // Pré-remplir les dates dans les champs (modifiables)
   document.getElementById('fnStart').value=s;
   document.getElementById('fnEnd').value=e;
   updateNewDatesInfo();
   document.getElementById('fnOccupants').value='';
-  document.getElementById('fnBookedBy').value='';
+  document.getElementById('fnBookedBy').value=userName||'';
   document.getElementById('fnComment').value='';
   const cf=bookings.find(b=>!(e<=b.start||s>=b.end));
-  if(cf&&!confirm(`⚠️ Chevauchement avec ${bkLabel(cf)}.\nContinuer ?`))return;
+  if(cf && !(await askConfirm(`Ces dates chevauchent le séjour de ${bkLabel(cf)}. Continuer quand même ?`, {title:'Chevauchement', yes:'Continuer'})))return;
   document.getElementById('modalNew').classList.add('show');
   setTimeout(()=>document.getElementById('fnOccupants').focus(),200);
 }
@@ -2307,7 +2396,7 @@ async function saveNew(){
   if(!start||!end||end<=start){toast('Dates invalides');return}
   // Re-vérifier les chevauchements avec les dates (potentiellement modifiées)
   const cf=bookings.find(b=>!(end<=b.start||start>=b.end));
-  if(cf&&!confirm(`⚠️ Chevauchement avec ${bkLabel(cf)}.\nContinuer ?`))return;
+  if(cf && !(await askConfirm(`Ces dates chevauchent le séjour de ${bkLabel(cf)}. Enregistrer quand même ?`, {title:'Chevauchement', yes:'Enregistrer'})))return;
   const bk={
     id:'b_'+Date.now(),
     occupants,
@@ -2337,7 +2426,7 @@ async function saveBk(){
   const start=document.getElementById('fStart').value,end=document.getElementById('fEnd').value;
   if(!occupants||!start||!end||end<=start){toast('Données invalides');return}
   const cf=bookings.find(b=>b.id!==editingId&&!(end<=b.start||start>=b.end));
-  if(cf&&!confirm(`⚠️ Conflit avec ${bkLabel(cf)}. Continuer ?`))return;
+  if(cf && !(await askConfirm(`Ces dates chevauchent le séjour de ${bkLabel(cf)}. Enregistrer quand même ?`, {title:'Chevauchement', yes:'Enregistrer'})))return;
   const idx=bookings.findIndex(b=>b.id===editingId);
   if(idx>=0){
     const old=bookings[idx];
@@ -2358,7 +2447,7 @@ async function saveBk(){
 }
 async function deleteBk(){
   const b=bookings.find(x=>x.id===editingId);if(!b)return;
-  if(!confirm(`Supprimer le séjour de ${bkLabel(b)} ?`))return;
+  if(!(await askConfirm(`Supprimer le séjour de ${bkLabel(b)} ? Cette action est irréversible.`, {title:'Supprimer le séjour', yes:'Supprimer', danger:true})))return;
   addHistory('Suppression',b);
   bookings=bookings.filter(x=>x.id!==editingId);
   await saveBookings();closeEdit();await load();toast('Séjour supprimé');
@@ -2491,7 +2580,7 @@ function renderLegend(){
   if(showFerie)html+=`<div class="legend-item"><span style="width:11px;height:11px;background:var(--ferie-bg);border:1px solid var(--ferie-dot);border-radius:2px;display:inline-block"></span><span>Jour férié</span></div>`;
   if(showVac)html+=`<div class="legend-item"><span style="width:11px;height:11px;background:var(--vac-bg);border:1px solid var(--vac-dot);border-radius:2px;display:inline-block"></span><span>Vacances scolaires zone ${zone}</span></div>`;
   if(showMaree){
-    html+=`<div class="legend-item"><span style="display:inline-block;width:22px;height:3px;background:linear-gradient(90deg,#cabfa6,#5a8ba0,#c8553d);border-radius:2px"></span><span>Marées Saint-Malo — barre = coefficient, chiffre si ≥ ${mareeMin} (grandes marées)</span></div>`;
+    html+=`<div class="legend-item"><span style="display:inline-flex;align-items:flex-end;gap:1px;height:12px"><i style="width:3px;height:5px;background:#cabfa6;border-radius:1px 1px 0 0;display:block"></i><i style="width:3px;height:8px;background:#a9c2cd;border-radius:1px 1px 0 0;display:block"></i><i style="width:3px;height:11px;background:#5a8ba0;border-radius:1px 1px 0 0;display:block"></i><i style="width:3px;height:8px;background:#d68a71;border-radius:1px 1px 0 0;display:block"></i></span><span>Marées Saint-Malo — hauteur = coefficient, chiffre si ≥ ${mareeMin}</span></div>`;
     html+=`<div class="legend-item" style="font-size:.65rem;color:var(--slate)">&lt;45 mortes-eaux · 45-69 moyennes · 70-94 vives-eaux · 95-104 grandes · ≥105 très grandes</div>`;
   }
   html+='</div>';
@@ -2584,16 +2673,71 @@ async function exportAllData(){
 // ══════════════════════════════
 // IDENTITE + HISTORIQUE DES RECETTES
 // ══════════════════════════════
-function ensureUserName(force){
-  if(userName && !force) return userName;
-  const n = (prompt("Ton prénom ?\n(il apparaîtra dans l'historique des modifications)", userName||'')||'').trim();
-  if(n){
-    userName = n.slice(0,30);
-    try{ localStorage.setItem('mignonne_user', userName); }catch(e){}
+// Ne demande plus rien a la volee : le prenom est recueilli une fois a
+// l'accueil. S'il manque encore, on signe "Anonyme" sans interrompre.
+function ensureUserName(){ return userName || ''; }
+
+function openWelcome(isChange){
+  const t = document.getElementById('welcomeTitle');
+  const x = document.getElementById('welcomeText');
+  const s = document.getElementById('welcomeSkip');
+  if(isChange){
+    t.textContent = 'Changer de prénom';
+    x.textContent = "C'est le prénom qui signe tes actions sur cet appareil.";
+    s.textContent = 'Annuler';
+  } else {
+    t.textContent = 'Bienvenue sur Mignonne';
+    x.textContent = "Comment t'appelles-tu ? Ton prénom signera tes réservations, tes recettes et tes bons plans, pour que toute la famille sache qui a fait quoi.";
+    s.textContent = 'Plus tard';
   }
-  return userName;
+  document.getElementById('welcomeInput').value = userName || '';
+  document.getElementById('modalWelcome').classList.add('show');
+  setTimeout(()=>document.getElementById('welcomeInput').focus(), 250);
 }
-function changeUserName(){ ensureUserName(true); renderRecettes(); }
+function saveWelcomeName(){
+  const n = (document.getElementById('welcomeInput').value || '').trim().slice(0,30);
+  if(!n){ toast('Indique un prénom'); return; }
+  userName = n;
+  try{ localStorage.setItem('mignonne_user', userName); }catch(e){}
+  document.getElementById('modalWelcome').classList.remove('show');
+  toast('Bienvenue, ' + userName + ' !');
+  if(typeof renderInfos==='function') renderInfos();
+}
+function skipWelcome(){
+  document.getElementById('modalWelcome').classList.remove('show');
+  try{ localStorage.setItem('mignonne_welcome_skipped', '1'); }catch(e){}
+}
+function changeUserName(){ openWelcome(true); }
+
+// Confirmation maison, retourne une Promise<boolean>
+let confirmResolver = null;
+function askConfirm(message, opts){
+  opts = opts || {};
+  return new Promise((resolve)=>{
+    confirmResolver = resolve;
+    document.getElementById('confirmTitle').textContent = opts.title || 'Confirmer';
+    document.getElementById('confirmText').textContent = message;
+    const yes = document.getElementById('confirmYes');
+    yes.textContent = opts.yes || 'Confirmer';
+    yes.className = 'btn ' + (opts.danger ? 'btn-danger' : 'btn-primary');
+    document.getElementById('confirmNo').textContent = opts.no || 'Annuler';
+    document.getElementById('modalConfirm').classList.add('show');
+    setTimeout(()=>yes.focus(), 150);
+  });
+}
+function resolveConfirm(v){
+  document.getElementById('modalConfirm').classList.remove('show');
+  if(confirmResolver){ const r = confirmResolver; confirmResolver = null; r(v); }
+}
+document.getElementById('confirmYes').addEventListener('click', ()=>resolveConfirm(true));
+document.getElementById('confirmNo').addEventListener('click', ()=>resolveConfirm(false));
+document.getElementById('modalConfirm').addEventListener('click', (e)=>{ if(e.target.id==='modalConfirm') resolveConfirm(false); });
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('modalConfirm').classList.contains('show')) resolveConfirm(false);
+    else document.querySelectorAll('.modal-backdrop.show').forEach(m=>m.classList.remove('show'));
+  }
+});
 
 function addRecHist(id, act){
   const who = ensureUserName() || 'Anonyme';
@@ -2731,8 +2875,24 @@ async function onQuickPhotoSelected(ev){
 // ══════════════════════════════
 // ONGLET INFOS : versions publiées et contact
 // ══════════════════════════════
-const APP_VERSION = 'v7';
+const APP_VERSION = 'v10';
 const CHANGELOG = [
+  { v:'v10', date:'13 septembre 2026', items:[
+      "L'application s'ouvre désormais sur la vue Mois, plus lisible, notamment sur téléphone.",
+      "La carte des bons plans est centrée sur la rue des Planches.",
+      "Les coefficients de marée peuvent être complétés année par année sans republier l'application. Un message signale les années non couvertes."
+  ]},
+  { v:'v9', date:'13 septembre 2026', items:[
+      "Ton prénom est demandé une seule fois à l'accueil, puis pré-rempli partout : réservations, recettes, bons plans.",
+      "Les boîtes de dialogue système sont remplacées par des fenêtres dans le style de l'application. Échap les ferme.",
+      "Textes du calendrier agrandis, notamment sur téléphone : numéros de jour, noms sur les séjours, coefficients de marée."
+  ]},
+  { v:'v8', date:'septembre 2026', items:[
+      "Le livre de recettes se télécharge maintenant en PDF avec les photos, les auteurs à jour, et ton nom et la date sur chaque page.",
+      "Marées en barres verticales : le sommet des barres dessine la houle du mois.",
+      "L'application prévient quand une nouvelle version est en ligne et se met à jour en un clic.",
+      "Correction de la fenêtre d'ajout d'un bon plan, mal placée et qui restait affichée."
+  ]},
   { v:'v7', date:'septembre 2026', items:[
       "Nouvel onglet Bons plans : les adresses et idées du coin, en tuiles ou sur une carte.",
       "Chacun peut ajouter, modifier ou supprimer un bon plan. Le lieu sur la carte est facultatif.",
@@ -2790,7 +2950,8 @@ let bpCatFilter = 'all';
 let editingBpId = null;
 let bpLat = null, bpLng = null;
 let bpMap = null, bpMarkers = [], bpPickMap = null, bpPickMarker = null;
-const SAINT_MALO = [48.6493, -2.0257];
+// Rue des Planches, 35400 Saint-Malo (source : Google Places, 13/09/2026)
+const SAINT_MALO = [48.6571836, -2.0015529];
 
 const BP_CATS = {
   resto:    { icon:'🍽️', label:'Restaurant / bar',   color:'#c8553d' },
@@ -2829,6 +2990,7 @@ async function loadBonsPlans(){
     bonsPlans = (v && v.bonsplans && typeof v.bonsplans==='object')
       ? Object.values(v.bonsplans).filter(x=>x && typeof x==='object' && x.id)
       : [];
+    if(v && v.marees && typeof v.marees==='object') mareesExtra = v.marees;
   }catch(e){
     console.error('Firebase bons plans load error:', e);
     bonsPlans = [];
@@ -2841,6 +3003,7 @@ async function loadBonsPlans(){
       bonsPlans = (v && v.bonsplans && typeof v.bonsplans==='object')
         ? Object.values(v.bonsplans).filter(x=>x && typeof x==='object' && x.id)
         : [];
+      if(v && v.marees && typeof v.marees==='object'){ mareesExtra = v.marees; render(); }
       renderBonsPlans();
     }, (err)=>{console.error('Listen bons plans error:', err)});
   }
@@ -2850,7 +3013,10 @@ async function saveBonsPlans(){
   try{
     const bp = {};
     bonsPlans.forEach(p=>{ bp[p.id] = p; });
-    await set(infosRef, { _pass: FAMILY_PASS, bonsplans: bp });
+    // On reecrit le noeud entier : il faut donc preserver les marees.
+    const payload = { _pass: FAMILY_PASS, bonsplans: bp };
+    if(mareesExtra && Object.keys(mareesExtra).length) payload.marees = mareesExtra;
+    await set(infosRef, payload);
   }catch(e){
     console.error('Firebase bons plans save error:', e);
     toast('Erreur de sauvegarde — vérifiez votre connexion');
@@ -2925,7 +3091,7 @@ function initBpMap(){
   const msg = document.getElementById('bpMapMsg');
   loadLeaflet().then(()=>{
     if(!bpMap){
-      bpMap = L.map('bpMap').setView(SAINT_MALO, 12);
+      bpMap = L.map('bpMap').setView(SAINT_MALO, 14);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
@@ -3024,7 +3190,7 @@ function toggleBpPicker(){
   b.textContent = 'Masquer la carte';
   loadLeaflet().then(()=>{
     if(!bpPickMap){
-      bpPickMap = L.map('bpPickMap').setView(SAINT_MALO, 12);
+      bpPickMap = L.map('bpPickMap').setView(SAINT_MALO, 14);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'© OpenStreetMap'}).addTo(bpPickMap);
       bpPickMap.on('click', (e)=>{
         bpLat = e.latlng.lat; bpLng = e.latlng.lng;
@@ -3071,22 +3237,232 @@ async function deleteBp(){
   if(!editingBpId) return;
   const p = bonsPlans.find(x=>x.id===editingBpId);
   if(!p) return;
-  if(!confirm('Supprimer « '+(p.titre||'ce bon plan')+' » ?')) return;
+  if(!(await askConfirm('Supprimer « '+(p.titre||'ce bon plan')+' » ?', {title:'Supprimer le bon plan', yes:'Supprimer', danger:true}))) return;
   bonsPlans = bonsPlans.filter(x=>x.id!==editingBpId);
   await saveBonsPlans();
   closeBp(); renderBonsPlans();
   toast('Bon plan supprimé');
 }
 
+
+// ══════════════════════════════
+// DETECTION DE NOUVELLE VERSION
+// Le fichier garde toujours le meme nom, donc le navigateur sert volontiers
+// une copie en cache. On interroge periodiquement le fichier en ignorant le
+// cache : si la version publiee differe de celle qui tourne, on propose de
+// recharger. Aucune donnee n'est touchee.
+// ══════════════════════════════
+function currentPageUrl(){
+  return location.pathname.replace(/[^/]*$/, '') + 'index.html';
+}
+async function checkForUpdate(silent){
+  try{
+    const r = await fetch(currentPageUrl() + '?_=' + Date.now(), { cache:'no-store' });
+    if(!r.ok) return;
+    const txt = await r.text();
+    const m = txt.match(/const APP_VERSION\s*=\s*'([^']+)'/);
+    if(!m) return;
+    if(m[1] !== APP_VERSION) showUpdateBanner(m[1]);
+  }catch(e){
+    if(!silent) console.warn('Verification de version impossible:', e);
+  }
+}
+function showUpdateBanner(newV){
+  if(document.getElementById('updBanner')) return;
+  const b = document.createElement('div');
+  b.id = 'updBanner';
+  b.className = 'upd-banner';
+  b.innerHTML = '<span>Une nouvelle version (' + newV + ') est disponible.</span>'
+              + '<button onclick="forceReload()">Mettre à jour</button>';
+  document.body.appendChild(b);
+}
+function forceReload(){
+  // On repart sur une URL neuve : le navigateur ne peut pas servir son cache.
+  const base = location.href.split('?')[0].split('#')[0];
+  location.replace(base + '?v=' + Date.now());
+}
+
+
+// ══════════════════════════════
+// LIVRE DE RECETTES EN PDF
+// Genere a la demande depuis les donnees vivantes : photos comprises,
+// auteurs a jour, et pied de page signe sur chaque page.
+// jsPDF est charge uniquement au moment du clic.
+// ══════════════════════════════
+let jspdfPromise = null;
+function loadJsPDF(){
+  if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve();
+  if(jspdfPromise) return jspdfPromise;
+  jspdfPromise = new Promise((resolve, reject)=>{
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload = ()=>resolve();
+    s.onerror = ()=>reject(new Error('jsPDF indisponible'));
+    document.head.appendChild(s);
+  });
+  return jspdfPromise;
+}
+
+// Mesure une image base64 pour conserver ses proportions dans le PDF
+function imgSize(dataUrl){
+  return new Promise((resolve)=>{
+    const im = new Image();
+    im.onload  = ()=>resolve({w:im.naturalWidth, h:im.naturalHeight});
+    im.onerror = ()=>resolve(null);
+    im.src = dataUrl;
+  });
+}
+
+async function downloadRecettesPdf(){
+  const btn = document.getElementById('btnRecPdf');
+  const old = btn ? btn.textContent : '';
+  if(btn){ btn.disabled = true; btn.textContent = '⏳ Préparation…'; }
+  try{
+    await loadJsPDF();
+    const who = ensureUserName() || 'Anonyme';
+    const now = new Date();
+    const p2 = n => String(n).padStart(2,'0');
+    const dateFr = p2(now.getDate())+'/'+p2(now.getMonth()+1)+'/'+now.getFullYear();
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({unit:'mm', format:'a4'});
+    const PW = 210, PH = 297, M = 18;
+    const CW = PW - M*2;
+
+    // Liste complete : recettes du livre + nouveautes famille
+    const livre = RECETTES_LOULI.map(r=>{
+      const ph = collectorPhotos[r.id] ? collectorPhotos[r.id] : (r.photos||[]);
+      const au = collectorAuthors[r.id] || r.auteur || 'Gourmand inconnu';
+      return { ...r, photos: ph, auteur: au, _type:'Recette en or' };
+    });
+    const fam = recettes.map(r=>({ ...r, _type:'Nouveauté famille' }));
+    const all = livre.concat(fam);
+
+    // ── Couverture ──
+    doc.setFillColor(244, 237, 225); doc.rect(0, 0, PW, PH, 'F');
+    doc.setTextColor(29, 43, 54);
+    doc.setFont('times', 'italic'); doc.setFontSize(34);
+    doc.text('Recettes de famille', PW/2, 110, {align:'center'});
+    doc.setFontSize(15);
+    doc.text('Mignonne · Saint-Malo', PW/2, 124, {align:'center'});
+    doc.setDrawColor(45, 95, 124); doc.setLineWidth(0.6);
+    doc.line(PW/2 - 26, 133, PW/2 + 26, 133);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+    doc.setTextColor(107, 122, 133);
+    doc.text(all.length + ' recettes', PW/2, 145, {align:'center'});
+    doc.text('Téléchargé par ' + who + ' le ' + dateFr, PW/2, 152, {align:'center'});
+
+    // ── Une recette par page ──
+    for(let i = 0; i < all.length; i++){
+      const r = all[i];
+      doc.addPage();
+      let y = M + 4;
+
+      doc.setTextColor(29, 43, 54);
+      doc.setFont('times', 'italic'); doc.setFontSize(19);
+      const tl = doc.splitTextToSize(r.titre || 'Sans titre', CW);
+      doc.text(tl, M, y); y += tl.length * 8 + 1;
+
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+      doc.setTextColor(107, 122, 133);
+      doc.text((r.auteur || 'Gourmand inconnu') + '  ·  ' + r._type, M, y);
+      y += 4;
+      doc.setDrawColor(232, 221, 200); doc.setLineWidth(0.4);
+      doc.line(M, y, PW - M, y); y += 7;
+
+      // Photos
+      const photos = Array.isArray(r.photos) ? r.photos.slice(0, 3) : [];
+      if(photos.length){
+        const gap = 4;
+        const bw = (CW - gap * (photos.length - 1)) / photos.length;
+        let maxH = 0;
+        for(let k = 0; k < photos.length; k++){
+          const sz = await imgSize(photos[k]);
+          if(!sz) continue;
+          const h = Math.min(bw * (sz.h / sz.w), 55);
+          const w = h * (sz.w / sz.h);
+          try{
+            doc.addImage(photos[k], 'JPEG', M + k * (bw + gap) + (bw - w) / 2, y, w, h);
+          }catch(e){ console.warn('Photo ignorée dans le PDF', e); }
+          if(h > maxH) maxH = h;
+        }
+        if(maxH) y += maxH + 7;
+      }
+
+      // Bloc de texte avec passage de page si besoin
+      const block = (titre, texte)=>{
+        if(!texte || !texte.trim()) return;
+        if(y > PH - M - 24){ doc.addPage(); y = M + 4; }
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5);
+        doc.setTextColor(45, 95, 124);
+        doc.text(titre.toUpperCase(), M, y); y += 5;
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+        doc.setTextColor(58, 74, 86);
+        const lines = doc.splitTextToSize(texte.replace(/\*\*/g, ''), CW);
+        for(const ln of lines){
+          if(y > PH - M - 12){ doc.addPage(); y = M + 4; }
+          doc.text(ln, M, y); y += 5;
+        }
+        y += 4;
+      };
+      block('Ingrédients', r.ingredients);
+      block('Préparation', r.preparation);
+
+      if(btn && i % 10 === 0){
+        btn.textContent = '⏳ ' + Math.round((i / all.length) * 100) + ' %';
+        await new Promise(res=>setTimeout(res, 0));
+      }
+    }
+
+    // ── Pied de page sur toutes les pages ──
+    const total = doc.getNumberOfPages();
+    for(let p = 1; p <= total; p++){
+      doc.setPage(p);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5);
+      doc.setTextColor(140, 150, 158);
+      doc.text('Téléchargé par ' + who + ' le ' + dateFr, M, PH - 10);
+      doc.text(p + ' / ' + total, PW - M, PH - 10, {align:'right'});
+    }
+
+    doc.save('Recettes_famille_Mignonne_' + now.getFullYear() + p2(now.getMonth()+1) + p2(now.getDate()) + '.pdf');
+    toast('Livre PDF généré ✓');
+  }catch(e){
+    console.error('PDF error:', e);
+    toast('Génération du PDF impossible — vérifiez votre connexion');
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = old || '📄 Télécharger le livre en PDF'; }
+  }
+}
+
 // (nécessaire car le script est un module ES)
 // ══════════════════════════════
 // Enregistrement automatique : on ecoute la saisie dans les 4 champs
+// Verification de version : au demarrage, puis periodiquement, puis a chaque
+// retour sur l'onglet (cas typique du telephone repris apres une pause).
+// Accueil : demander le prenom une seule fois par appareil
+(function(){
+  let skipped = false;
+  try{ skipped = localStorage.getItem('mignonne_welcome_skipped')==='1'; }catch(e){}
+  if(!userName && !skipped) setTimeout(()=>openWelcome(false), 900);
+})();
+// Les marees complementaires vivent dans le meme noeud que les bons plans :
+// on les charge des le demarrage pour que le calendrier en beneficie.
+setTimeout(()=>{ loadBonsPlans(); }, 1500);
+setTimeout(()=>checkForUpdate(true), 4000);
+setInterval(()=>checkForUpdate(true), 10*60*1000);
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState === 'visible') checkForUpdate(true);
+});
+
 ['frTitre','frAuteur','frIngredients','frPreparation'].forEach(fid=>{
   const el = document.getElementById(fid);
   if(el) el.addEventListener('input', scheduleRecAutosave);
 });
 
 window.renderInfos = renderInfos;
+window.downloadRecettesPdf = downloadRecettesPdf;
+window.forceReload = forceReload;
+window.checkForUpdate = checkForUpdate;
 window.setBpView = setBpView;
 window.setBpCatFilter = setBpCatFilter;
 window.openBpNew = openBpNew;
@@ -3099,6 +3475,8 @@ window.clearBpLoc = clearBpLoc;
 window.renderBonsPlans = renderBonsPlans;
 window.exportAllData = exportAllData;
 window.changeUserName = changeUserName;
+window.saveWelcomeName = saveWelcomeName;
+window.skipWelcome = skipWelcome;
 window.quickAddPhoto = quickAddPhoto;
 window.onQuickPhotoSelected = onQuickPhotoSelected;
 window.startNew = startNew;
@@ -3436,7 +3814,7 @@ function openRecNew(){
   recPhotosBuffer = [];
   document.getElementById('recEditTitle').textContent = 'Nouvelle recette';
   document.getElementById('frTitre').value = '';
-  document.getElementById('frAuteur').value = '';
+  document.getElementById('frAuteur').value = userName || '';
   document.getElementById('frIngredients').value = '';
   document.getElementById('frPreparation').value = '';
   document.getElementById('recDeleteBtn').style.display = 'none';
@@ -3690,7 +4068,7 @@ async function deleteRec(){
   if(!editingRecId)return;
   const r = recettes.find(x=>x.id===editingRecId);
   if(!r)return;
-  if(!confirm(`Supprimer la recette « ${r.titre} » ?`))return;
+  if(!(await askConfirm(`Supprimer la recette « ${r.titre} » ? Ses photos et son historique seront perdus.`, {title:'Supprimer la recette', yes:'Supprimer', danger:true})))return;
   recettes = recettes.filter(x=>x.id!==editingRecId);
   delete recHist[editingRecId];
   await saveRecettes();
@@ -3708,7 +4086,7 @@ load();
 </script>
 
 <!-- Modal édition de l'auteur (Collector "Gourmand inconnu") -->
-<div class="modal-backdrop" id="modalAuthorEdit" onclick="if(event.target.id==='modalAuthorEdit')closeRecAuthorEdit()">
+<div class="modal-backdrop" role="dialog" aria-modal="true" id="modalAuthorEdit" onclick="if(event.target.id==='modalAuthorEdit')closeRecAuthorEdit()">
   <div class="modal" style="max-width:520px">
     <div class="modal-handle"></div>
     <h2 class="modal-title">Compléter l'auteur</h2>
