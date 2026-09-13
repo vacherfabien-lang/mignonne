@@ -1927,12 +1927,18 @@ function updateDisplayToggles(view){
 // Prévient quand les marées ne couvrent pas l'année affichée, au lieu de
 // laisser un calque vide sans explication.
 function mareeCoverageNote(annee){
+  try{
   if(!showMaree) return '';
   const has = Object.keys(MAREES).some(k=>k.startsWith(annee+'-'))
            || Object.keys(mareesExtra||{}).some(k=>k.startsWith(annee+'-'));
   if(has) return '';
   return '<div class="maree-warn">Coefficients de marée non disponibles pour '+annee
        + ' — les données officielles du SHOM ne sont pas encore publiées.</div>';
+  }catch(e){
+    // Un avertissement secondaire ne doit jamais empêcher le calendrier de s'afficher.
+    console.warn('mareeCoverageNote:', e);
+    return '';
+  }
 }
 document.querySelectorAll('#subtabs-resa .tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
@@ -1976,7 +1982,7 @@ function render(){buildVacSet();renderYear();renderMonth();renderList();renderHi
 // ══════════════════════════════
 function renderYear(){
   const wY=document.getElementById('mareeWarnYear');
-  if(wY) wY.innerHTML = mareeCoverageNote(String(curYear));
+  if(wY) wY.innerHTML = mareeCoverageNote(String(curYearView));
   const grid=document.getElementById('yearGrid');
   grid.innerHTML='';
   document.getElementById('currentYear').textContent=curYearView;
@@ -2207,7 +2213,7 @@ window.addEventListener('resize',()=>{
 // ══════════════════════════════
 function renderMonth(){
   const wM=document.getElementById('mareeWarnMonth');
-  if(wM) wM.innerHTML = mareeCoverageNote(String(curYear));
+  if(wM) wM.innerHTML = mareeCoverageNote(String(curYearMonth));
   document.getElementById('currentMonth').textContent=MFR[curMonthIdx]+' '+curYearMonth;
   const card=document.getElementById('monthCard');
   card.innerHTML='';
@@ -2875,8 +2881,11 @@ async function onQuickPhotoSelected(ev){
 // ══════════════════════════════
 // ONGLET INFOS : versions publiées et contact
 // ══════════════════════════════
-const APP_VERSION = 'v10';
+const APP_VERSION = 'v11';
 const CHANGELOG = [
+  { v:'v11', date:'13 septembre 2026', items:[
+      "Correction d'un défaut de la v10 qui empêchait le calendrier, les statistiques et les recettes de s'afficher."
+  ]},
   { v:'v10', date:'13 septembre 2026', items:[
       "L'application s'ouvre désormais sur la vue Mois, plus lisible, notamment sur téléphone.",
       "La carte des bons plans est centrée sur la rue des Planches.",
