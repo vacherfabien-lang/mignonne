@@ -226,11 +226,19 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
 .cal-cell.is-ferie.is-vac{background:linear-gradient(135deg,var(--ferie-bg) 50%,var(--vac-bg) 50%)}
 
 /* Marées : 5 paliers de bg, prennent le pas sur fériés/vacances quand actifs */
-.cal-cell.tide-1{background:var(--tide-1)}
-.cal-cell.tide-2{background:var(--tide-2)}
-.cal-cell.tide-3{background:var(--tide-3)}
-.cal-cell.tide-4{background:var(--tide-4)}
-.cal-cell.tide-5{background:var(--tide-5)}
+/* Marées : jauge fine en bas de cellule. Les fonds colorés restent
+   réservés aux vacances scolaires et jours fériés, pour éviter que
+   trois systèmes de couleur se superposent. */
+.cal-cell .tide-bar{
+  position:absolute;left:0;bottom:0;height:2px;
+  pointer-events:none;border-radius:0 2px 0 0;opacity:.9;
+}
+.cal-grid.big .cal-cell .tide-bar{height:3px}
+.cal-cell .tide-bar.tide-1{background:#cabfa6}
+.cal-cell .tide-bar.tide-2{background:#a9c2cd}
+.cal-cell .tide-bar.tide-3{background:#5a8ba0}
+.cal-cell .tide-bar.tide-4{background:#d68a71}
+.cal-cell .tide-bar.tide-5{background:#c8553d}
 
 /* Chiffre du coef en HAUT à droite (pour ne pas être masqué par les bandes de séjour) */
 .cal-cell .tide-coef{
@@ -242,8 +250,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
 .cal-grid.big .cal-cell .tide-coef{
   top:4px;right:6px;font-size:.55rem;
 }
-.cal-cell.tide-4 .tide-coef,
-.cal-cell.tide-5 .tide-coef{color:var(--coral);opacity:.95;font-weight:700}
+/* Le chiffre n'apparaît que sur les marées notables : il est donc
+   toujours mis en avant. */
+.cal-cell .tide-coef{color:var(--coral);opacity:1;font-weight:700}
 
 .cal-cell.today .day-num-sm{color:var(--coral);font-weight:800}
 
@@ -634,7 +643,35 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
   object-fit:cover;border-radius:4px;cursor:zoom-in;
   border:1px solid var(--line);
 }
-.modal-rec-read .rec-section-title{
+.modal-rec-read .infos-wrap{max-width:660px;margin:0 auto;padding:.2rem 0 2rem}
+.infos-card{background:var(--sand-light);border:1px solid var(--stone);border-radius:4px;padding:1.1rem;margin-bottom:.9rem}
+.infos-h{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:1.1rem;margin:0 0 .4rem;color:var(--ink)}
+.infos-p{font-size:.82rem;color:var(--ink-soft);margin:0 0 .8rem;line-height:1.55}
+.infos-note{font-size:.72rem;color:var(--slate);font-style:italic;margin:.7rem 0 0}
+.infos-mail{display:inline-flex;align-items:center;gap:.4rem;background:var(--ocean);color:var(--sand-light);text-decoration:none;padding:.7rem 1.1rem;border-radius:3px;font-size:.85rem;font-weight:500}
+.infos-user{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.infos-user-name{font-weight:700;color:var(--ocean);font-size:.95rem}
+.changelog{margin-top:.2rem}
+.chg{border-left:2px solid var(--stone);padding:.1rem 0 .8rem .8rem;margin-bottom:.2rem}
+.chg-cur{border-left-color:var(--ocean)}
+.chg-head{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.3rem}
+.chg-v{font-weight:700;color:var(--ink);font-size:.9rem}
+.chg-tag{background:rgba(45,95,124,.12);color:var(--ocean);border:1px solid var(--ocean);border-radius:100px;padding:.1rem .5rem;font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.chg-date{color:var(--slate);font-size:.72rem;font-style:italic;margin-left:auto}
+.chg-list{margin:.2rem 0 0;padding-left:1rem}
+.chg-list li{font-size:.78rem;color:var(--ink-soft);line-height:1.5;margin-bottom:.22rem}
+.rec-hist{margin-top:.3rem;border-top:1px solid var(--stone);padding-top:.5rem}
+.rec-hist-row{display:flex;flex-wrap:wrap;gap:.15rem .6rem;padding:.32rem 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.74rem;line-height:1.4}
+.rec-hist-row:last-child{border-bottom:none}
+.rec-hist-date{color:var(--slate);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rec-hist-who{color:var(--ocean);font-weight:600}
+.rec-hist-act{color:var(--ink-soft);flex:1 1 100%}
+.rec-hist-empty{font-size:.74rem;color:var(--slate);font-style:italic;padding:.3rem 0}
+.rec-save-state{font-size:.72rem;font-style:italic;margin-right:auto;align-self:center}
+.rec-save-state.wait{color:var(--slate)}
+.rec-save-state.ok{color:#5b7553}
+.rec-save-state.warn{color:var(--coral);font-style:normal;font-weight:600}
+.rec-section-title{
   font-family:'Fraunces',serif;font-style:italic;
   font-size:1rem;color:var(--ocean-deep);
   margin-bottom:.4rem;margin-top:1rem;
@@ -939,6 +976,7 @@ textarea.form-control{resize:vertical;min-height:62px}
   <nav class="tabs tabs-main">
     <button class="tab-main active" data-section="resa">Réservations</button>
     <button class="tab-main" data-section="rec">Recettes de famille</button>
+    <button class="tab-main" data-section="infos">Infos</button>
   </nav>
   <!-- Sous-onglets de Réservations -->
   <nav class="tabs tabs-sub" id="subtabs-resa">
@@ -1036,6 +1074,50 @@ textarea.form-control{resize:vertical;min-height:62px}
 </section>
 
 <!-- VUE RECETTES -->
+<section class="view" id="view-infos">
+  <div class="infos-wrap">
+
+    <div class="infos-card">
+      <h3 class="infos-h">Contact</h3>
+      <p class="infos-p">
+        Un souci, une idée, un bug ? Écris directement à celui qui développe l'application.
+      </p>
+      <a class="infos-mail" href="mailto:fabien@quelleeolienne.fr?subject=Mignonne%20%E2%80%94%20retour%20sur%20l%27application">
+        ✉️ fabien@quelleeolienne.fr
+      </a>
+    </div>
+
+    <div class="infos-card">
+      <h3 class="infos-h">Ton identité sur cet appareil</h3>
+      <p class="infos-p">
+        C'est le prénom qui signe tes modifications dans l'historique des recettes.
+      </p>
+      <div class="infos-user">
+        <span id="infosUserName" class="infos-user-name">—</span>
+        <button class="btn btn-secondary" onclick="changeUserName()">Changer</button>
+      </div>
+    </div>
+
+    <div class="infos-card">
+      <h3 class="infos-h">Sauvegarde des données</h3>
+      <p class="infos-p">
+        Télécharge l'intégralité des données (séjours, historique, recettes, photos)
+        dans un fichier à conserver. L'opération lit seulement, elle ne modifie rien.
+      </p>
+      <button class="btn btn-primary" onclick="exportAllData()">💾 Exporter les données</button>
+    </div>
+
+    <div class="infos-card">
+      <h3 class="infos-h">Versions publiées</h3>
+      <div id="infosChangelog" class="changelog"></div>
+      <p class="infos-note">
+        L'historique commence à la version 2. Les versions antérieures n'ont pas été consignées.
+      </p>
+    </div>
+
+  </div>
+</section>
+
 <section class="view" id="view-recettes">
   <!-- Écran de déverrouillage : affiché par défaut, masqué après bon mot de passe -->
   <div id="recLock" class="rec-lock">
@@ -1101,7 +1183,7 @@ textarea.form-control{resize:vertical;min-height:62px}
       <div class="collector-banner-icon">⚠️</div>
       <div class="collector-banner-text">
         <strong>Compléter l'auteur de cette recette en or</strong>
-        <p>Cette recette n'a pas d'auteur connu. Vous pouvez le compléter ci-dessous, mais <strong>une seule fois</strong> : après enregistrement, le nom de l'auteur sera gravé définitivement et ne pourra plus jamais être modifié. Soyez bien sûr de vous !</p>
+        <p>Indique le nom de la personne à qui l'on doit cette recette. C'est modifiable à tout moment, et chaque changement apparaît dans l'historique de la fiche.</p>
       </div>
     </div>
     <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-control" id="frTitre" placeholder="Ex : Tarte aux pommes de mamie" autocomplete="off"></div>
@@ -1122,11 +1204,14 @@ textarea.form-control{resize:vertical;min-height:62px}
     </div>
     <div class="modal-actions">
       <button class="btn btn-danger" id="recDeleteBtn" onclick="deleteRec()" style="display:none">Supprimer</button>
-      <button class="btn btn-secondary" onclick="closeRecEdit()">Annuler</button>
-      <button class="btn btn-primary" onclick="saveRec()">Enregistrer</button>
+      <span id="recSaveState" class="rec-save-state"></span>
+      <button class="btn btn-secondary" id="recCancelBtn" onclick="closeRecEdit()">Annuler</button>
+      <button class="btn btn-primary" id="recSaveBtn" onclick="saveRec()">Enregistrer</button>
     </div>
   </div>
 </div>
+
+<input type="file" id="quickPhotoInput" accept="image/*" multiple style="display:none" onchange="onQuickPhotoSelected(event)">
 
 <!-- LIGHTBOX PHOTO RECETTE -->
 <div class="rec-lightbox" id="recLightbox" onclick="closeRecLightbox()">
@@ -1308,6 +1393,12 @@ function tideClass(coef){
   return 'tide-5';
 }
 function tideLabel(coef){ return coef==null ? '' : ('coef '+coef); }
+// Largeur de la jauge de maree : les coefficients vont de 20 a ~120
+function tideWidth(coef){
+  if(coef==null) return '0%';
+  const pct = Math.round(((coef - 20) / 100) * 100);
+  return Math.max(10, Math.min(100, pct)) + '%';
+}
 
 const SEED=[
   {id:'s01',name:'Yannick et Théa',          start:'2025-05-09',end:'2025-05-14',comment:''},
@@ -1633,6 +1724,9 @@ function switchSection(section){
     }
     document.getElementById('view-'+activeTab.dataset.view).classList.add('active');
     updateDisplayToggles(activeTab.dataset.view);
+  } else if(section==='infos'){
+    document.getElementById('view-infos').classList.add('active');
+    renderInfos();
   } else {
     document.getElementById('view-recettes').classList.add('active');
     if(!recUnlocked){
@@ -1737,13 +1831,8 @@ function renderYear(){
       if(iso===todayIso)cell.classList.add('today');
       if(isFerie(iso))cell.classList.add('is-ferie');
       if(isVac(iso))cell.classList.add('is-vac');
-      // Marées : fond coloré progressif sur TOUS les jours quand le toggle est actif
-      if(showMaree){
-        const t=getTide(iso);
-        if(t!=null){
-          cell.classList.add(tideClass(t));
-        }
-      }
+      // Marées : jauge discrète en bas de cellule (plus de fond coloré,
+      // les fonds restent réservés aux vacances et jours fériés)
       // Marquer le jour d'arrivée
       const bkArrival=bookings.find(b=>b.start===iso);
       if(bkArrival)cell.classList.add('is-arrival');
@@ -1754,14 +1843,20 @@ function renderYear(){
       num.textContent=d;
       cell.appendChild(num);
 
-      // Chiffre coef marée en bas à droite (vue Année — petite taille)
+      // Marées : jauge systématique, chiffre uniquement sur les marées notables
       if(showMaree){
         const tY=getTide(iso);
         if(tY!=null){
-          const tc=document.createElement('div');
-          tc.className='tide-coef';
-          tc.textContent=tY;
-          cell.appendChild(tc);
+          const tb=document.createElement('div');
+          tb.className='tide-bar '+tideClass(tY);
+          tb.style.width=tideWidth(tY);
+          cell.appendChild(tb);
+          if(tY>=mareeMin){
+            const tc=document.createElement('div');
+            tc.className='tide-coef';
+            tc.textContent=tY;
+            cell.appendChild(tc);
+          }
         }
       }
 
@@ -1961,14 +2056,9 @@ function renderMonth(){
     if(iso===today)cell.classList.add('today');
     if(isFerie(iso))cell.classList.add('is-ferie');
     if(isVac(iso))cell.classList.add('is-vac');
-    // Marées (fond + chiffre) : sur tous les jours quand le toggle est actif
+    // Marées : jauge discrète, pas de fond coloré
     let coef=null;
-    if(showMaree){
-      coef=getTide(iso);
-      if(coef!=null){
-        cell.classList.add(tideClass(coef));
-      }
-    }
+    if(showMaree){ coef=getTide(iso); }
     // Marquer le jour d'arrivée
     const bkArrival=bookings.find(b=>b.start===iso);
     if(bkArrival)cell.classList.add('is-arrival');
@@ -1986,12 +2076,18 @@ function renderMonth(){
     }
     cell.appendChild(num);
 
-    // Chiffre du coefficient en bas à droite (vue Mois uniquement) — toujours affiché si dispo
+    // Marées : jauge systématique, chiffre uniquement sur les marées notables
     if(showMaree && coef!=null){
-      const tc=document.createElement('div');
-      tc.className='tide-coef';
-      tc.textContent=coef;
-      cell.appendChild(tc);
+      const tb=document.createElement('div');
+      tb.className='tide-bar '+tideClass(coef);
+      tb.style.width=tideWidth(coef);
+      cell.appendChild(tb);
+      if(coef>=mareeMin){
+        const tc=document.createElement('div');
+        tc.className='tide-coef';
+        tc.textContent=coef;
+        cell.appendChild(tc);
+      }
     }
 
     const bk=bkAt(iso);
@@ -2294,7 +2390,7 @@ function renderLegend(){
   if(showFerie)html+=`<div class="legend-item"><span style="width:11px;height:11px;background:var(--ferie-bg);border:1px solid var(--ferie-dot);border-radius:2px;display:inline-block"></span><span>Jour férié</span></div>`;
   if(showVac)html+=`<div class="legend-item"><span style="width:11px;height:11px;background:var(--vac-bg);border:1px solid var(--vac-dot);border-radius:2px;display:inline-block"></span><span>Vacances scolaires zone ${zone}</span></div>`;
   if(showMaree){
-    html+=`<div class="legend-item"><span style="width:11px;height:11px;background:var(--tide-3);border:1px solid var(--tide-dot);border-radius:2px;display:inline-block"></span><span>Coefficients de marée Saint-Malo</span></div>`;
+    html+=`<div class="legend-item"><span style="display:inline-block;width:22px;height:3px;background:linear-gradient(90deg,#cabfa6,#5a8ba0,#c8553d);border-radius:2px"></span><span>Marées Saint-Malo — barre = coefficient, chiffre si ≥ ${mareeMin} (grandes marées)</span></div>`;
     html+=`<div class="legend-item" style="font-size:.65rem;color:var(--slate)">&lt;45 mortes-eaux · 45-69 moyennes · 70-94 vives-eaux · 95-104 grandes · ≥105 très grandes</div>`;
   }
   html+='</div>';
@@ -2381,9 +2477,210 @@ async function exportAllData(){
   }
 }
 
+
+// ══════════════════════════════
+// IDENTITE + HISTORIQUE DES RECETTES
+// ══════════════════════════════
+function ensureUserName(force){
+  if(userName && !force) return userName;
+  const n = (prompt("Ton prénom ?\n(il apparaîtra dans l'historique des modifications)", userName||'')||'').trim();
+  if(n){
+    userName = n.slice(0,30);
+    try{ localStorage.setItem('mignonne_user', userName); }catch(e){}
+  }
+  return userName;
+}
+function changeUserName(){ ensureUserName(true); renderRecettes(); }
+
+function addRecHist(id, act){
+  const who = ensureUserName() || 'Anonyme';
+  if(!Array.isArray(recHist[id])) recHist[id] = [];
+  recHist[id].push({ ts: Date.now(), who: who, act: act });
+  if(recHist[id].length > REC_HIST_MAX) recHist[id] = recHist[id].slice(-REC_HIST_MAX);
+}
+
+function recHistHtml(id){
+  const h = recHist[id];
+  if(!Array.isArray(h) || !h.length){
+    return '<div class="rec-section-title">Historique</div><div class="rec-hist-empty">Aucune modification enregistrée pour l\'instant.</div>';
+  }
+  const p = n => String(n).padStart(2,'0');
+  const rows = h.slice().reverse().slice(0,10).map(e=>{
+    const d = new Date(e.ts);
+    const date = p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear()+' à '+p(d.getHours())+':'+p(d.getMinutes());
+    return '<div class="rec-hist-row"><span class="rec-hist-date">'+date+'</span>'
+         + '<span class="rec-hist-who">'+escTxt(e.who||'?')+'</span>'
+         + '<span class="rec-hist-act">'+escTxt(e.act||'')+'</span></div>';
+  }).join('');
+  return '<div class="rec-section-title">Historique</div><div class="rec-hist">'+rows+'</div>';
+}
+
+// ── Indicateur d'enregistrement ──
+function setRecSaveState(state){
+  const el = document.getElementById('recSaveState');
+  if(!el) return;
+  if(state==='wait'){ el.textContent='Enregistrement…'; el.className='rec-save-state wait'; }
+  else if(state==='ok'){ el.textContent='Enregistré ✓'; el.className='rec-save-state ok'; }
+  else if(state==='warn'){ el.textContent='Titre et préparation obligatoires'; el.className='rec-save-state warn'; }
+  else { el.textContent=''; el.className='rec-save-state'; }
+}
+
+// ── Enregistrement automatique du texte (recettes famille) ──
+function scheduleRecAutosave(){
+  if(!recAutosave || !editingRecId) return;
+  setRecSaveState('wait');
+  clearTimeout(recAutosaveTimer);
+  recAutosaveTimer = setTimeout(doRecAutosave, 900);
+}
+async function doRecAutosave(){
+  if(!recAutosave || !editingRecId) return;
+  const idx = recettes.findIndex(r=>r.id===editingRecId);
+  if(idx < 0) return;
+  const titre        = document.getElementById('frTitre').value.trim();
+  const auteur       = document.getElementById('frAuteur').value.trim();
+  const ingredients  = document.getElementById('frIngredients').value.trim();
+  const preparation  = document.getElementById('frPreparation').value.trim();
+  if(!titre || !preparation){ setRecSaveState('warn'); return; }
+  const b = recettes[idx];
+  const changed = [];
+  if(b.titre !== titre) changed.push('titre');
+  if((b.auteur||'') !== auteur) changed.push('auteur');
+  if((b.ingredients||'') !== ingredients) changed.push('ingrédients');
+  if((b.preparation||'') !== preparation) changed.push('préparation');
+  if(!changed.length){ setRecSaveState('ok'); return; }
+  recettes[idx] = { ...b, titre, auteur, ingredients, preparation, updatedAt: new Date().toISOString() };
+  addRecHist(editingRecId, 'Modification : ' + changed.join(', '));
+  await saveRecettes();
+  setRecSaveState('ok');
+  renderRecettes();
+}
+
+// ── Enregistrement immediat des photos ──
+async function persistPhotosNow(act){
+  if(editingCollectorId){
+    if(recPhotosBuffer.length) collectorPhotos[editingCollectorId] = [...recPhotosBuffer];
+    else delete collectorPhotos[editingCollectorId];
+    addRecHist(editingCollectorId, act);
+    await saveCollectorPhotos();
+    await saveRecettes();
+  } else if(editingRecId){
+    const idx = recettes.findIndex(r=>r.id===editingRecId);
+    if(idx < 0) return;
+    recettes[idx] = { ...recettes[idx], photos:[...recPhotosBuffer], updatedAt:new Date().toISOString() };
+    addRecHist(editingRecId, act);
+    await saveRecettes();
+  } else {
+    return; // creation en cours : rien a persister tant que la recette n'existe pas
+  }
+  renderRecettes();
+  setRecSaveState('ok');
+}
+
+// ── Ajout de photo en un clic depuis la fiche ──
+let quickPhotoId = null, quickPhotoFam = false;
+function quickAddPhoto(id, isFam){
+  quickPhotoId = id; quickPhotoFam = !!isFam;
+  document.getElementById('quickPhotoInput').click();
+}
+async function onQuickPhotoSelected(ev){
+  const files = Array.from(ev.target.files||[]);
+  ev.target.value = '';
+  if(!files.length || !quickPhotoId) return;
+  const id = quickPhotoId;
+  let cur;
+  if(quickPhotoFam){
+    const r = recettes.find(x=>x.id===id);
+    if(!r){toast('Recette introuvable');return}
+    cur = [...(r.photos||[])];
+  } else {
+    const r = RECETTES_LOULI.find(x=>x.id===id);
+    if(!r){toast('Recette introuvable');return}
+    cur = collectorPhotos[id] ? [...collectorPhotos[id]] : [...(r.photos||[])];
+  }
+  const slots = REC_MAX_PHOTOS - cur.length;
+  if(slots <= 0){ toast('Maximum ' + REC_MAX_PHOTOS + ' photos'); return; }
+  toast('Compression de la photo…');
+  try{
+    const urls = await Promise.all(files.slice(0, slots).map(compressPhoto));
+    urls.forEach(u=>{ if(u) cur.push(u); });
+  }catch(e){
+    console.error('Photo compression error:', e);
+    toast('Impossible de traiter la photo'); return;
+  }
+  if(quickPhotoFam){
+    const idx = recettes.findIndex(x=>x.id===id);
+    recettes[idx] = { ...recettes[idx], photos: cur, updatedAt:new Date().toISOString() };
+    addRecHist(id, 'Photo ajoutée');
+    await saveRecettes();
+  } else {
+    collectorPhotos[id] = cur;
+    addRecHist(id, 'Photo ajoutée');
+    await saveCollectorPhotos();
+    await saveRecettes();
+  }
+  renderRecettes();
+  const fresh = quickPhotoFam ? recettes.find(x=>x.id===id) : RECETTES_LOULI.find(x=>x.id===id);
+  if(fresh) openRecRead(fresh);
+  toast('Photo ajoutée ✓');
+}
+
+
+// ══════════════════════════════
+// ONGLET INFOS : versions publiées et contact
+// ══════════════════════════════
+const APP_VERSION = 'v6';
+const CHANGELOG = [
+  { v:'v6', date:'septembre 2026', items:[
+      "Marées repensées : une barre fine sous chaque jour au lieu d'un fond coloré, et le coefficient affiché uniquement sur les grandes marées.",
+      "Nouvel onglet Infos : contact, sauvegarde et versions publiées.",
+      "Le nom de l'auteur d'une recette est désormais modifiable à tout moment."
+  ]},
+  { v:'v5', date:'septembre 2026', items:[
+      "Ajout de photo en un clic depuis la fiche recette.",
+      "Les modifications de recettes sont enregistrées automatiquement, sans validation.",
+      "Historique des modifications affiché sur chaque fiche, signé par un prénom."
+  ]},
+  { v:'v4', date:'septembre 2026', items:[
+      "Les photos peuvent venir de la galerie ou de l'ordinateur, plus seulement de l'appareil photo."
+  ]},
+  { v:'v3', date:'septembre 2026', items:[
+      "Correction d'un défaut qui pouvait remplacer les séjours réels par des données de démonstration.",
+      "Les modifications sont bloquées tant que la connexion n'est pas établie.",
+      "Correction d'un ralentissement progressif au fil d'une session."
+  ]},
+  { v:'v2', date:'septembre 2026', items:[
+      "Ajout du bouton d'export des données."
+  ]}
+];
+
+function renderInfos(){
+  const u = document.getElementById('infosUserName');
+  if(u) u.textContent = userName || 'non renseigné';
+  const c = document.getElementById('infosChangelog');
+  if(!c) return;
+  c.innerHTML = CHANGELOG.map((r,i)=>
+    '<div class="chg' + (i===0?' chg-cur':'') + '">'
+    + '<div class="chg-head"><span class="chg-v">' + escTxt(r.v) + '</span>'
+    + (i===0?'<span class="chg-tag">version en ligne</span>':'')
+    + '<span class="chg-date">' + escTxt(r.date) + '</span></div>'
+    + '<ul class="chg-list">' + r.items.map(x=>'<li>'+escTxt(x)+'</li>').join('') + '</ul>'
+    + '</div>'
+  ).join('');
+}
+
 // (nécessaire car le script est un module ES)
 // ══════════════════════════════
+// Enregistrement automatique : on ecoute la saisie dans les 4 champs
+['frTitre','frAuteur','frIngredients','frPreparation'].forEach(fid=>{
+  const el = document.getElementById(fid);
+  if(el) el.addEventListener('input', scheduleRecAutosave);
+});
+
+window.renderInfos = renderInfos;
 window.exportAllData = exportAllData;
+window.changeUserName = changeUserName;
+window.quickAddPhoto = quickAddPhoto;
+window.onQuickPhotoSelected = onQuickPhotoSelected;
 window.startNew = startNew;
 window.toggleFerie = toggleFerie;
 window.toggleVac = toggleVac;
@@ -2428,6 +2725,16 @@ let recFilter = 'all';              // 'all' | 'louli' | 'fam'
 let editingRecId = null;
 let recPhotosBuffer = [];           // photos en cours d'édition (data URL base64)
 const REC_MAX_PHOTOS = 3;
+// Identite locale, pour signer l'historique des modifications
+let userName = '';
+try{ userName = localStorage.getItem('mignonne_user') || ''; }catch(e){}
+// Historique par recette : { idRecette: [ {ts, who, act} ] }
+let recHist = {};
+const REC_HIST_MAX = 20;
+// Enregistrement automatique
+let recAutosave = false;
+let recAutosaveTimer = null;
+
 const REC_PHOTO_MAX_SIZE = 1200;    // max width/height en pixels
 const REC_PHOTO_QUALITY = 0.75;     // qualité JPEG
 
@@ -2443,9 +2750,12 @@ async function loadRecettes(){
   try{
     const snap = await get(recettesRef);
     recettes = snap.exists() ? parseFbCollection(snap.val()) : [];
+    const rawRec = snap.exists() ? snap.val() : null;
+    recHist = (rawRec && rawRec._hist && typeof rawRec._hist==='object') ? rawRec._hist : {};
   }catch(e){
     console.error('Firebase recettes load error:', e);
     recettes = [];
+    recHist = {};
   }
   // Charger aussi les photos Collector
   try{
@@ -2470,6 +2780,8 @@ async function loadRecettes(){
   // Écoute temps réel : dès que quelqu'un ajoute/modifie une recette, on recharge
   onValue(recettesRef, (snap)=>{
     recettes = snap.exists() ? parseFbCollection(snap.val()) : [];
+    const raw = snap.exists() ? snap.val() : null;
+    recHist = (raw && raw._hist && typeof raw._hist==='object') ? raw._hist : {};
     renderRecettes();
   }, (err)=>{console.error('Listen recettes error:', err)});
   // Écoute temps réel des photos Collector
@@ -2515,7 +2827,7 @@ async function saveCollectorAuthors(){
 }
 async function saveRecettes(){
   try{
-    const obj = { _pass: FAMILY_PASS };
+    const obj = { _pass: FAMILY_PASS, _hist: recHist };
     recettes.forEach(r=>{obj[r.id]=r});
     await set(recettesRef, obj);
   }catch(e){
@@ -2661,22 +2973,25 @@ function openRecRead(r){
 
   body.innerHTML = `
     <div class="rec-read-title">${escTxt(r.titre)}</div>
-    <div class="rec-read-author">${escTxt(effectiveAuthorRead||'Gourmand inconnu')}${(!isFamRead && !effectiveAuthorRead)?` <button class="author-edit-btn" onclick="openRecAuthorEdit('${r.id}')" title="Compléter l'auteur">?</button>`:''}${isFam?'  ·  Nouveauté famille':'  ·  Recette en or'}</div>
+    <div class="rec-read-author">${escTxt(effectiveAuthorRead||'Gourmand inconnu')}${(!isFamRead)?` <button class="author-edit-btn" onclick="openRecAuthorEdit('${r.id}')" title="Modifier l'auteur">${effectiveAuthorRead?'✎':'?'}</button>`:''}${isFam?'  ·  Nouveauté famille':'  ·  Recette en or'}</div>
     ${photosHtml}
     ${ingrHtml}
     ${prepHtml}
+    ${recHistHtml(r.id)}
   `;
 
   // Boutons : Modifier complète pour les recettes Ajout / Photos seulement pour les Collector
   if(isFam){
     actions.innerHTML = `
       <button class="btn btn-secondary" onclick="closeRecRead()">Fermer</button>
+      <button class="btn btn-secondary" onclick="quickAddPhoto('${r.id}',true)">📷 Photo</button>
       <button class="btn btn-primary" onclick="openRecEdit('${r.id}')">Modifier</button>
     `;
   } else {
     actions.innerHTML = `
       <button class="btn btn-secondary" onclick="closeRecRead()">Fermer</button>
-      <button class="btn btn-primary" onclick="openRecPhotosEdit('${r.id}')">📷 Modifier les photos</button>
+      <button class="btn btn-secondary" onclick="openRecPhotosEdit('${r.id}')">Gérer</button>
+      <button class="btn btn-primary" onclick="quickAddPhoto('${r.id}',false)">📷 Ajouter une photo</button>
     `;
   }
   document.getElementById('modalRecRead').classList.add('show');
@@ -2702,6 +3017,11 @@ function openRecNew(){
   document.getElementById('frIngredients').value = '';
   document.getElementById('frPreparation').value = '';
   document.getElementById('recDeleteBtn').style.display = 'none';
+  // Creation : on garde une validation explicite (la recette n'existe pas encore)
+  recAutosave = false;
+  setRecSaveState('');
+  document.getElementById('recCancelBtn').style.display = '';
+  document.getElementById('recSaveBtn').textContent = 'Enregistrer';
   renderRecPhotosEdit();
   document.getElementById('modalRecEdit').classList.add('show');
   setTimeout(()=>document.getElementById('frTitre').focus(),200);
@@ -2717,6 +3037,11 @@ function openRecEdit(id){
   document.getElementById('frIngredients').value = r.ingredients||'';
   document.getElementById('frPreparation').value = r.preparation||'';
   document.getElementById('recDeleteBtn').style.display = '';
+  // Enregistrement direct : plus de bouton Annuler (il serait mensonger)
+  recAutosave = true;
+  setRecSaveState('');
+  document.getElementById('recCancelBtn').style.display = 'none';
+  document.getElementById('recSaveBtn').textContent = 'Terminé';
   renderRecPhotosEdit();
   closeRecRead();
   document.getElementById('modalRecEdit').classList.add('show');
@@ -2725,6 +3050,13 @@ function closeRecEdit(){
   document.getElementById('modalRecEdit').classList.remove('show');
   recPhotosBuffer = [];
   editingCollectorId = null;
+  recAutosave = false;
+  clearTimeout(recAutosaveTimer);
+  setRecSaveState('');
+  const cb = document.getElementById('recCancelBtn');
+  if(cb) cb.style.display = '';
+  const sb = document.getElementById('recSaveBtn');
+  if(sb) sb.textContent = 'Enregistrer';
   // Restaurer l'état normal des champs
   ['frTitre','frAuteur','frIngredients','frPreparation'].forEach(id=>{
     const el=document.getElementById(id);
@@ -2764,6 +3096,10 @@ function openRecPhotosEdit(id){
   if(banner) banner.style.display = 'none';
   // Cacher le bouton Supprimer
   document.getElementById('recDeleteBtn').style.display = 'none';
+  recAutosave = false;
+  setRecSaveState('');
+  document.getElementById('recCancelBtn').style.display = 'none';
+  document.getElementById('recSaveBtn').textContent = 'Terminé';
   renderRecPhotosEdit();
   closeRecRead();
   document.getElementById('modalRecEdit').classList.add('show');
@@ -2775,14 +3111,9 @@ let editingAuthorCollectorId = null;
 function openRecAuthorEdit(id){
   const r = RECETTES_LOULI.find(x=>x.id===id);
   if(!r){toast('Recette introuvable');return}
-  // Sécurité : on ne propose ce modal que si auteur encore vide ET pas d'override
-  if((r.auteur && r.auteur.trim()) || collectorAuthors[id]){
-    toast('L\'auteur est déjà renseigné');
-    return;
-  }
   editingAuthorCollectorId = id;
   document.getElementById('authorEditRecipeTitle').textContent = r.titre;
-  document.getElementById('authorEditInput').value = '';
+  document.getElementById('authorEditInput').value = collectorAuthors[id] || r.auteur || '';
   closeRecRead();
   document.getElementById('modalAuthorEdit').classList.add('show');
   setTimeout(()=>document.getElementById('authorEditInput').focus(), 200);
@@ -2800,13 +3131,10 @@ async function saveRecAuthor(){
   const input = document.getElementById('authorEditInput');
   const newAuthor = (input.value || '').trim();
   if(!newAuthor){toast('Indiquez un auteur');return}
-  // Confirmation : édition définitive
-  const confirmed = confirm(
-    `⚠️ Attention\n\nVous êtes sur le point d'enregistrer "${newAuthor}" comme auteur de cette recette.\n\nCette modification est DÉFINITIVE : une fois enregistrée, le nom de l'auteur ne pourra plus jamais être modifié.\n\nÊtes-vous bien sûr de vous ?`
-  );
-  if(!confirmed) return;
   collectorAuthors[editingAuthorCollectorId] = newAuthor;
+  addRecHist(editingAuthorCollectorId, 'Auteur renseigné : ' + newAuthor);
   await saveCollectorAuthors();
+  await saveRecettes();
   closeRecAuthorEdit();
   renderRecettes();
   toast('Auteur enregistré ✓');
@@ -2829,7 +3157,9 @@ function renderRecPhotosEdit(){
 function removeRecPhoto(i){
   recPhotosBuffer.splice(i,1);
   renderRecPhotosEdit();
+  persistPhotosNow('Photo supprimée');
 }
+
 
 // === COMPRESSION PHOTO ===
 function onRecPhotoSelected(ev){
@@ -2845,6 +3175,7 @@ function onRecPhotoSelected(ev){
     .then(dataUrls=>{
       dataUrls.forEach(d=>{if(d)recPhotosBuffer.push(d)});
       renderRecPhotosEdit();
+      persistPhotosNow('Photo ajoutée');
     })
     .catch(err=>{console.error('Photo compression error:',err);toast('Impossible de traiter la photo')})
     .finally(()=>{ev.target.value=''});
@@ -2916,8 +3247,10 @@ async function saveRec(){
     }
   } else {
     // Création
+    const newId = 'r_'+Date.now();
+    addRecHist(newId, 'Recette créée');
     recettes.push({
-      id: 'r_'+Date.now(),
+      id: newId,
       titre, auteur, ingredients, preparation,
       photos: [...recPhotosBuffer],
       source: 'fam',
@@ -2936,6 +3269,7 @@ async function deleteRec(){
   if(!r)return;
   if(!confirm(`Supprimer la recette « ${r.titre} » ?`))return;
   recettes = recettes.filter(x=>x.id!==editingRecId);
+  delete recHist[editingRecId];
   await saveRecettes();
   closeRecEdit();
   renderRecettes();
@@ -2957,10 +3291,10 @@ load();
     <h2 class="modal-title">Compléter l'auteur</h2>
     <div style="font-size:.85rem;color:var(--slate);margin:-.4rem 0 .8rem;font-style:italic">Recette · <span id="authorEditRecipeTitle" style="color:var(--ink)"></span></div>
     <div class="collector-banner" style="display:flex">
-      <div class="collector-banner-icon">⚠️</div>
+      <div class="collector-banner-icon">✍️</div>
       <div class="collector-banner-text">
-        <strong>Modification unique et définitive</strong>
-        <p>Cette recette n'a pas d'auteur connu. Vous pouvez le compléter ci-dessous, mais <strong>une seule fois</strong> : après enregistrement, le nom de l'auteur sera gravé définitivement et ne pourra plus jamais être modifié. Soyez bien sûr de vous !</p>
+        <strong>Qui a transmis cette recette ?</strong>
+        <p>Indique le nom de la personne à qui l'on doit cette recette. C'est modifiable à tout moment, et chaque changement apparaît dans l'historique de la fiche.</p>
       </div>
     </div>
     <div class="form-group">
