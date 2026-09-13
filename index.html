@@ -354,7 +354,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
 .history-who{display:inline-block;padding:.05rem .35rem;border-radius:2px;color:white;font-size:.65rem;font-weight:600;margin-right:.3rem;vertical-align:middle}
 
 /* ── STATS ONGLET ── */
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
 .stats-year-block{background:var(--sand-light);border:1px solid var(--line);border-radius:5px;padding:1.1rem 1rem}
 .stats-year-title{font-family:'Fraunces',serif;font-size:1.3rem;font-style:italic;color:var(--ocean-deep);margin-bottom:.8rem;text-align:center}
 .stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:.4rem 0;border-bottom:1px solid var(--line)}
@@ -643,7 +643,47 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
   object-fit:cover;border-radius:4px;cursor:zoom-in;
   border:1px solid var(--line);
 }
-.modal-rec-read .infos-wrap{max-width:660px;margin:0 auto;padding:.2rem 0 2rem}
+.modal-rec-read /* ── BONS PLANS ── */
+.bp-bar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.7rem}
+.bp-switch{display:inline-flex;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden}
+.bp-sw{background:var(--sand-light);border:none;padding:.5rem .9rem;font-size:.76rem;font-family:'Inter',sans-serif;color:var(--ink-soft);cursor:pointer}
+.bp-sw.active{background:var(--ocean);color:var(--sand-light);font-weight:600}
+.bp-search{flex:1;min-width:130px;background:var(--sand-light);border:1px solid var(--line-strong);border-radius:3px;padding:.5rem .7rem;font-size:.8rem;font-family:'Inter',sans-serif;color:var(--ink)}
+.bp-filters{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.9rem}
+.bp-chip{background:var(--sand-light);border:1px solid var(--line-strong);border-radius:100px;padding:.3rem .7rem;font-size:.7rem;font-family:'Inter',sans-serif;color:var(--ink-soft);cursor:pointer}
+.bp-chip.on{background:var(--ocean);border-color:var(--ocean);color:var(--sand-light);font-weight:600}
+.bp-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.8rem}
+.bp-tile{background:var(--sand-light);border:1px solid var(--stone);border-left:3px solid var(--bpc,var(--ocean));border-radius:4px;padding:.9rem;display:flex;flex-direction:column;gap:.35rem}
+.bp-tile-head{display:flex;align-items:center;gap:.5rem}
+.bp-tile-icon{font-size:1.1rem}
+.bp-tile-title{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:1rem;margin:0;color:var(--ink)}
+.bp-tile-cat{font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:var(--bpc,var(--slate));font-weight:600}
+.bp-tile-desc{font-size:.78rem;color:var(--ink-soft);margin:.15rem 0;line-height:1.5;white-space:pre-wrap}
+.bp-tile-link{font-size:.74rem;color:var(--ocean);text-decoration:none;font-weight:500}
+.bp-tile-foot{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:auto;padding-top:.5rem;border-top:1px solid rgba(0,0,0,.06)}
+.bp-tile-by{font-size:.68rem;color:var(--slate);font-style:italic}
+.bp-tile-loc{font-size:.68rem;color:var(--ocean)}
+.bp-tile-edit{margin-left:auto;background:none;border:1px solid var(--line-strong);border-radius:3px;padding:.25rem .6rem;font-size:.68rem;font-family:'Inter',sans-serif;color:var(--ink-soft);cursor:pointer}
+.bp-empty{grid-column:1/-1;text-align:center;color:var(--slate);font-style:italic;font-size:.82rem;padding:2rem 1rem}
+.bp-map-wrap{position:relative}
+.bp-map{height:62vh;min-height:340px;border:1px solid var(--stone);border-radius:4px;background:var(--sand-light)}
+.bp-map-msg{font-size:.74rem;color:var(--slate);font-style:italic;padding:.5rem 0}
+.bp-pin{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.bp-pop strong{font-family:'Fraunces',serif;font-style:italic;font-size:1rem}
+.bp-pop-cat{font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:#6b7a85;margin:.15rem 0 .3rem}
+.bp-pop p{margin:.2rem 0;font-size:.78rem;white-space:pre-wrap}
+.bp-pop-by{font-size:.68rem;font-style:italic;color:#6b7a85;margin-top:.3rem}
+.bp-loc-state{font-size:.75rem;color:var(--slate);font-style:italic;margin-bottom:.5rem}
+.bp-loc-state.set{color:var(--ocean);font-style:normal;font-weight:600}
+.bp-loc-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.bp-pick-wrap{margin-bottom:.6rem}
+.bp-pick-map{height:230px;border:1px solid var(--stone);border-radius:4px}
+.bp-pick-hint{font-size:.72rem;color:var(--slate);font-style:italic;padding:.4rem 0}
+@media(max-width:900px){
+  .bp-tiles{grid-template-columns:1fr}
+  .bp-map{height:56vh}
+}
+.infos-wrap{max-width:660px;margin:0 auto;padding:.2rem 0 2rem}
 .infos-card{background:var(--sand-light);border:1px solid var(--stone);border-radius:4px;padding:1.1rem;margin-bottom:.9rem}
 .infos-h{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:1.1rem;margin:0 0 .4rem;color:var(--ink)}
 .infos-p{font-size:.82rem;color:var(--ink-soft);margin:0 0 .8rem;line-height:1.55}
@@ -763,7 +803,7 @@ textarea.form-control{resize:vertical;min-height:62px}
 @media(max-width:540px){
   /* Le year-grid est géré dans le bloc 720px en repeat(2,1fr) */
   .tab{padding:.5rem .25rem;font-size:.7rem}
-  .stats-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
 }
 /* ═══════════════════════════════════════════════════════════════════════
    AJUSTEMENTS MOBILE (≤720px = portrait téléphone, beaucoup d'Android)
@@ -976,6 +1016,7 @@ textarea.form-control{resize:vertical;min-height:62px}
   <nav class="tabs tabs-main">
     <button class="tab-main active" data-section="resa">Réservations</button>
     <button class="tab-main" data-section="rec">Recettes de famille</button>
+    <button class="tab-main" data-section="plans">Bons plans</button>
     <button class="tab-main" data-section="infos">Infos</button>
   </nav>
   <!-- Sous-onglets de Réservations -->
@@ -1074,6 +1115,23 @@ textarea.form-control{resize:vertical;min-height:62px}
 </section>
 
 <!-- VUE RECETTES -->
+<section class="view" id="view-plans">
+  <div class="bp-bar">
+    <div class="bp-switch">
+      <button class="bp-sw active" id="bpSwTiles" onclick="setBpView('tiles')">Tuiles</button>
+      <button class="bp-sw" id="bpSwMap" onclick="setBpView('map')">Carte</button>
+    </div>
+    <input type="text" id="bpSearch" class="bp-search" placeholder="Rechercher…" oninput="renderBonsPlans()">
+    <button class="btn-add" onclick="openBpNew()"><span class="plus">+</span> Bon plan</button>
+  </div>
+  <div class="bp-filters" id="bpFilters"></div>
+  <div id="bpTiles" class="bp-tiles"></div>
+  <div id="bpMapWrap" class="bp-map-wrap" style="display:none">
+    <div id="bpMap" class="bp-map"></div>
+    <div id="bpMapMsg" class="bp-map-msg"></div>
+  </div>
+</section>
+
 <section class="view" id="view-infos">
   <div class="infos-wrap">
 
@@ -1207,6 +1265,45 @@ textarea.form-control{resize:vertical;min-height:62px}
       <span id="recSaveState" class="rec-save-state"></span>
       <button class="btn btn-secondary" id="recCancelBtn" onclick="closeRecEdit()">Annuler</button>
       <button class="btn btn-primary" id="recSaveBtn" onclick="saveRec()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalBp">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title" id="bpModalTitle">Nouveau bon plan</h2>
+    <div class="form-group"><label class="form-label">Nom</label>
+      <input type="text" class="form-control" id="bpTitre" placeholder="Ex : Crêperie du Corps de Garde" autocomplete="off"></div>
+    <div class="form-group"><label class="form-label">Catégorie</label>
+      <select class="form-control" id="bpCat">
+        <option value="resto">🍽️ Restaurant / bar</option>
+        <option value="balade">🥾 Balade / randonnée</option>
+        <option value="plage">🏖️ Plage / baignade</option>
+        <option value="commerce">🛒 Commerce / marché</option>
+        <option value="activite">🎡 Activité / visite</option>
+        <option value="autre">✨ Autre</option>
+      </select></div>
+    <div class="form-group"><label class="form-label">Description</label>
+      <textarea class="form-control" id="bpDesc" placeholder="Ce qu'il faut savoir, ce qu'on y mange, quand y aller…" style="min-height:100px"></textarea></div>
+    <div class="form-group"><label class="form-label">Lien (facultatif)</label>
+      <input type="url" class="form-control" id="bpLien" placeholder="https://…" autocomplete="off"></div>
+    <div class="form-group">
+      <label class="form-label">Emplacement (facultatif)</label>
+      <div class="bp-loc-state" id="bpLocState">Aucun lieu — n'apparaîtra pas sur la carte</div>
+      <div id="bpPickWrap" class="bp-pick-wrap" style="display:none">
+        <div id="bpPickMap" class="bp-pick-map"></div>
+        <div class="bp-pick-hint">Touche la carte à l'endroit voulu pour poser le repère.</div>
+      </div>
+      <div class="bp-loc-actions">
+        <button type="button" class="btn btn-secondary" id="bpPickBtn" onclick="toggleBpPicker()">📍 Placer sur la carte</button>
+        <button type="button" class="btn btn-secondary" id="bpClearLocBtn" onclick="clearBpLoc()" style="display:none">Retirer le lieu</button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="bpDeleteBtn" onclick="deleteBp()" style="display:none">Supprimer</button>
+      <button class="btn btn-secondary" onclick="closeBp()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveBp()">Enregistrer</button>
     </div>
   </div>
 </div>
@@ -1724,6 +1821,10 @@ function switchSection(section){
     }
     document.getElementById('view-'+activeTab.dataset.view).classList.add('active');
     updateDisplayToggles(activeTab.dataset.view);
+  } else if(section==='plans'){
+    document.getElementById('view-plans').classList.add('active');
+    loadBonsPlans();
+    if(bpView==='map') setTimeout(initBpMap, 150);
   } else if(section==='infos'){
     document.getElementById('view-infos').classList.add('active');
     renderInfos();
@@ -2353,7 +2454,7 @@ function computeStats(yr){
 
 function renderStatsView(){
   const body=document.getElementById('statsBody');
-  const s25=computeStats(2025),s26=computeStats(2026);
+  const s25=computeStats(2025),s26=computeStats(2026),s27=computeStats(2027);
 
   function yearBlock(yr,s){
     return`<div class="stats-year-block">
@@ -2363,7 +2464,7 @@ function renderStatsView(){
       <div class="stat-row"><span class="stat-row-label">Record de nuits consécutives</span><span class="stat-row-val record">${s.record}</span></div>
     </div>`;
   }
-  body.innerHTML=`<div class="stats-grid">${yearBlock(2025,s25)}${yearBlock(2026,s26)}</div>`;
+  body.innerHTML=`<div class="stats-grid">${yearBlock(2025,s25)}${yearBlock(2026,s26)}${yearBlock(2027,s27)}</div>`;
 }
 
 // ══════════════════════════════
@@ -2428,9 +2529,9 @@ async function exportAllData(){
   if(btn){ btn.disabled = true; btn.textContent = '⏳ Lecture en cours…'; }
   try{
     // Lecture seule de tous les noeuds
-    const [bkSnap, hSnap, recSnap, cpSnap, caSnap] = await Promise.all([
+    const [bkSnap, hSnap, recSnap, cpSnap, caSnap, infSnap] = await Promise.all([
       get(bookingsRef), get(historyRef), get(recettesRef),
-      get(collectorPhotosRef), get(collectorAuthorsRef)
+      get(collectorPhotosRef), get(collectorAuthorsRef), get(infosRef)
     ]);
 
     const dump = {
@@ -2444,14 +2545,16 @@ async function exportAllData(){
       history:           hSnap.exists()   ? stripPass(hSnap.val())   : {},
       recettes:          recSnap.exists() ? stripPass(recSnap.val()) : {},
       collector_photos:  cpSnap.exists()  ? stripPass(cpSnap.val())  : {},
-      collector_authors: caSnap.exists()  ? stripPass(caSnap.val())  : {}
+      collector_authors: caSnap.exists()  ? stripPass(caSnap.val())  : {},
+      infos:             infSnap.exists() ? stripPass(infSnap.val()) : {}
     };
 
     const nb = {
       sejours:  Object.keys(dump.bookings).length,
       histo:    Object.keys(dump.history).length,
       recettes: Object.keys(dump.recettes).length,
-      photos:   Object.keys(dump.collector_photos).length
+      photos:   Object.keys(dump.collector_photos).length,
+      plans:    (dump.infos && dump.infos.bonsplans) ? Object.keys(dump.infos.bonsplans).length : 0
     };
     dump._meta.contenu = nb;
 
@@ -2468,7 +2571,7 @@ async function exportAllData(){
     setTimeout(()=>URL.revokeObjectURL(url), 2000);
 
     const ko = Math.round(json.length/1024);
-    toast('Sauvegarde : ' + nb.sejours + ' sejours, ' + nb.recettes + ' recettes (' + ko + ' Ko)');
+    toast('Sauvegarde : ' + nb.sejours + ' séjours, ' + nb.recettes + ' recettes, ' + nb.plans + ' bons plans (' + ko + ' Ko)');
   }catch(e){
     console.error('Export error:', e);
     toast('Export impossible — verifiez votre connexion');
@@ -2628,8 +2731,13 @@ async function onQuickPhotoSelected(ev){
 // ══════════════════════════════
 // ONGLET INFOS : versions publiées et contact
 // ══════════════════════════════
-const APP_VERSION = 'v6';
+const APP_VERSION = 'v7';
 const CHANGELOG = [
+  { v:'v7', date:'septembre 2026', items:[
+      "Nouvel onglet Bons plans : les adresses et idées du coin, en tuiles ou sur une carte.",
+      "Chacun peut ajouter, modifier ou supprimer un bon plan. Le lieu sur la carte est facultatif.",
+      "Ajout de l'année 2027 dans les statistiques."
+  ]},
   { v:'v6', date:'septembre 2026', items:[
       "Marées repensées : une barre fine sous chaque jour au lieu d'un fond coloré, et le coefficient affiché uniquement sur les grandes marées.",
       "Nouvel onglet Infos : contact, sauvegarde et versions publiées.",
@@ -2668,6 +2776,308 @@ function renderInfos(){
   ).join('');
 }
 
+
+// ══════════════════════════════
+// BONS PLANS
+// Stockes dans le noeud Firebase 'infos' (deja autorise par les regles).
+// La carte utilise Leaflet, charge a la demande : si le CDN est
+// indisponible, la vue Tuiles continue de fonctionner normalement.
+// ══════════════════════════════
+let bonsPlans = [];
+let bpListenerOn = false;
+let bpView = 'tiles';
+let bpCatFilter = 'all';
+let editingBpId = null;
+let bpLat = null, bpLng = null;
+let bpMap = null, bpMarkers = [], bpPickMap = null, bpPickMarker = null;
+const SAINT_MALO = [48.6493, -2.0257];
+
+const BP_CATS = {
+  resto:    { icon:'🍽️', label:'Restaurant / bar',   color:'#c8553d' },
+  balade:   { icon:'🥾', label:'Balade / randonnée', color:'#5b7553' },
+  plage:    { icon:'🏖️', label:'Plage / baignade',   color:'#2d5f7c' },
+  commerce: { icon:'🛒', label:'Commerce / marché',  color:'#b8862e' },
+  activite: { icon:'🎡', label:'Activité / visite',  color:'#7d4e7a' },
+  autre:    { icon:'✨', label:'Autre',              color:'#6b7a85' }
+};
+function bpCat(c){ return BP_CATS[c] || BP_CATS.autre; }
+
+// ── Chargement de Leaflet a la demande ──
+let leafletPromise = null;
+function loadLeaflet(){
+  if(window.L) return Promise.resolve();
+  if(leafletPromise) return leafletPromise;
+  leafletPromise = new Promise((resolve, reject)=>{
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(css);
+    const s = document.createElement('script');
+    s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    s.onload = ()=>resolve();
+    s.onerror = ()=>reject(new Error('carte indisponible'));
+    document.head.appendChild(s);
+  });
+  return leafletPromise;
+}
+
+// ── Lecture / ecriture ──
+async function loadBonsPlans(){
+  try{
+    const snap = await get(infosRef);
+    const v = snap.exists() ? snap.val() : null;
+    bonsPlans = (v && v.bonsplans && typeof v.bonsplans==='object')
+      ? Object.values(v.bonsplans).filter(x=>x && typeof x==='object' && x.id)
+      : [];
+  }catch(e){
+    console.error('Firebase bons plans load error:', e);
+    bonsPlans = [];
+  }
+  renderBonsPlans();
+  if(!bpListenerOn){
+    bpListenerOn = true;
+    onValue(infosRef, (snap)=>{
+      const v = snap.exists() ? snap.val() : null;
+      bonsPlans = (v && v.bonsplans && typeof v.bonsplans==='object')
+        ? Object.values(v.bonsplans).filter(x=>x && typeof x==='object' && x.id)
+        : [];
+      renderBonsPlans();
+    }, (err)=>{console.error('Listen bons plans error:', err)});
+  }
+}
+
+async function saveBonsPlans(){
+  try{
+    const bp = {};
+    bonsPlans.forEach(p=>{ bp[p.id] = p; });
+    await set(infosRef, { _pass: FAMILY_PASS, bonsplans: bp });
+  }catch(e){
+    console.error('Firebase bons plans save error:', e);
+    toast('Erreur de sauvegarde — vérifiez votre connexion');
+  }
+}
+
+// ── Filtres et rendu ──
+function setBpView(v){
+  bpView = v;
+  document.getElementById('bpSwTiles').classList.toggle('active', v==='tiles');
+  document.getElementById('bpSwMap').classList.toggle('active', v==='map');
+  document.getElementById('bpTiles').style.display = (v==='tiles') ? '' : 'none';
+  document.getElementById('bpMapWrap').style.display = (v==='map') ? '' : 'none';
+  if(v==='map') initBpMap();
+}
+function setBpCatFilter(c){ bpCatFilter = c; renderBonsPlans(); }
+
+function bpFiltered(){
+  const q = (document.getElementById('bpSearch')?.value || '').trim().toLowerCase();
+  return bonsPlans.filter(p=>{
+    if(bpCatFilter!=='all' && (p.cat||'autre')!==bpCatFilter) return false;
+    if(!q) return true;
+    return ((p.titre||'')+' '+(p.desc||'')+' '+(p.auteur||'')).toLowerCase().includes(q);
+  }).sort((a,b)=> (a.titre||'').localeCompare(b.titre||'','fr'));
+}
+
+function renderBonsPlans(){
+  // Filtres par categorie
+  const fc = document.getElementById('bpFilters');
+  if(fc){
+    const counts = {};
+    bonsPlans.forEach(p=>{ const c=p.cat||'autre'; counts[c]=(counts[c]||0)+1; });
+    let h = '<button class="bp-chip'+(bpCatFilter==='all'?' on':'')+'" onclick="setBpCatFilter(\'all\')">Tout ('+bonsPlans.length+')</button>';
+    Object.keys(BP_CATS).forEach(c=>{
+      if(!counts[c]) return;
+      h += '<button class="bp-chip'+(bpCatFilter===c?' on':'')+'" onclick="setBpCatFilter(\''+c+'\')">'+BP_CATS[c].icon+' '+escTxt(BP_CATS[c].label)+' ('+counts[c]+')</button>';
+    });
+    fc.innerHTML = h;
+  }
+
+  // Tuiles
+  const t = document.getElementById('bpTiles');
+  if(t){
+    const list = bpFiltered();
+    if(!list.length){
+      t.innerHTML = '<div class="bp-empty">Aucun bon plan pour l\'instant. Ajoute le premier !</div>';
+    } else {
+      t.innerHTML = list.map(p=>{
+        const c = bpCat(p.cat);
+        const loc = (p.lat!=null && p.lng!=null)
+          ? '<span class="bp-tile-loc">📍 sur la carte</span>' : '';
+        const lien = p.lien
+          ? '<a class="bp-tile-link" href="'+escTxt(p.lien)+'" target="_blank" rel="noopener">Ouvrir le lien ↗</a>' : '';
+        const sig = p.auteur ? '<span class="bp-tile-by">par '+escTxt(p.auteur)+'</span>' : '';
+        return '<article class="bp-tile" style="--bpc:'+c.color+'">'
+          + '<div class="bp-tile-head"><span class="bp-tile-icon">'+c.icon+'</span>'
+          + '<h4 class="bp-tile-title">'+escTxt(p.titre||'Sans nom')+'</h4></div>'
+          + '<div class="bp-tile-cat">'+escTxt(c.label)+'</div>'
+          + (p.desc ? '<p class="bp-tile-desc">'+escTxt(p.desc)+'</p>' : '')
+          + lien
+          + '<div class="bp-tile-foot">'+sig+loc
+          + '<button class="bp-tile-edit" onclick="openBpEdit(\''+p.id+'\')">Modifier</button></div>'
+          + '</article>';
+      }).join('');
+    }
+  }
+  if(bpView==='map') refreshBpMarkers();
+}
+
+// ── Carte principale ──
+function initBpMap(){
+  const msg = document.getElementById('bpMapMsg');
+  loadLeaflet().then(()=>{
+    if(!bpMap){
+      bpMap = L.map('bpMap').setView(SAINT_MALO, 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(bpMap);
+    }
+    setTimeout(()=>{ bpMap.invalidateSize(); refreshBpMarkers(); }, 120);
+    if(msg) msg.textContent = '';
+  }).catch(()=>{
+    if(msg) msg.textContent = "La carte n'a pas pu être chargée (connexion ?). La vue Tuiles reste disponible.";
+  });
+}
+
+function refreshBpMarkers(){
+  if(!bpMap || !window.L) return;
+  bpMarkers.forEach(m=>bpMap.removeLayer(m));
+  bpMarkers = [];
+  const list = bpFiltered().filter(p=>p.lat!=null && p.lng!=null);
+  list.forEach(p=>{
+    const c = bpCat(p.cat);
+    const icon = L.divIcon({
+      className: 'bp-pin-wrap',
+      html: '<div class="bp-pin" style="background:'+c.color+'">'+c.icon+'</div>',
+      iconSize: [30,30], iconAnchor: [15,15]
+    });
+    const m = L.marker([p.lat, p.lng], {icon}).addTo(bpMap);
+    m.bindPopup(
+      '<div class="bp-pop"><strong>'+escTxt(p.titre||'Sans nom')+'</strong>'
+      + '<div class="bp-pop-cat">'+escTxt(c.label)+'</div>'
+      + (p.desc?'<p>'+escTxt(p.desc)+'</p>':'')
+      + (p.auteur?'<div class="bp-pop-by">par '+escTxt(p.auteur)+'</div>':'')
+      + '</div>'
+    );
+    bpMarkers.push(m);
+  });
+  const msg = document.getElementById('bpMapMsg');
+  if(msg && !list.length) msg.textContent = 'Aucun bon plan localisé pour ce filtre.';
+  else if(msg) msg.textContent = '';
+}
+
+// ── Formulaire ──
+function openBpNew(){
+  editingBpId = null; bpLat = null; bpLng = null;
+  document.getElementById('bpModalTitle').textContent = 'Nouveau bon plan';
+  document.getElementById('bpTitre').value = '';
+  document.getElementById('bpCat').value = 'resto';
+  document.getElementById('bpDesc').value = '';
+  document.getElementById('bpLien').value = '';
+  document.getElementById('bpDeleteBtn').style.display = 'none';
+  hideBpPicker(); updateBpLocState();
+  document.getElementById('modalBp').classList.add('show');
+  setTimeout(()=>document.getElementById('bpTitre').focus(), 200);
+}
+function openBpEdit(id){
+  const p = bonsPlans.find(x=>x.id===id);
+  if(!p){toast('Bon plan introuvable');return}
+  editingBpId = id; bpLat = (p.lat!=null?p.lat:null); bpLng = (p.lng!=null?p.lng:null);
+  document.getElementById('bpModalTitle').textContent = 'Modifier le bon plan';
+  document.getElementById('bpTitre').value = p.titre||'';
+  document.getElementById('bpCat').value = p.cat||'autre';
+  document.getElementById('bpDesc').value = p.desc||'';
+  document.getElementById('bpLien').value = p.lien||'';
+  document.getElementById('bpDeleteBtn').style.display = '';
+  hideBpPicker(); updateBpLocState();
+  document.getElementById('modalBp').classList.add('show');
+}
+function closeBp(){
+  document.getElementById('modalBp').classList.remove('show');
+  hideBpPicker();
+  editingBpId = null;
+}
+function updateBpLocState(){
+  const el = document.getElementById('bpLocState');
+  const clr = document.getElementById('bpClearLocBtn');
+  if(bpLat!=null && bpLng!=null){
+    el.textContent = 'Lieu enregistré : ' + bpLat.toFixed(4) + ', ' + bpLng.toFixed(4);
+    el.className = 'bp-loc-state set';
+    clr.style.display = '';
+  } else {
+    el.textContent = "Aucun lieu — n'apparaîtra pas sur la carte";
+    el.className = 'bp-loc-state';
+    clr.style.display = 'none';
+  }
+}
+function clearBpLoc(){ bpLat=null; bpLng=null; if(bpPickMarker && bpPickMap){bpPickMap.removeLayer(bpPickMarker);bpPickMarker=null;} updateBpLocState(); }
+function hideBpPicker(){
+  const w = document.getElementById('bpPickWrap');
+  if(w) w.style.display = 'none';
+  const b = document.getElementById('bpPickBtn');
+  if(b) b.textContent = '📍 Placer sur la carte';
+}
+function toggleBpPicker(){
+  const w = document.getElementById('bpPickWrap');
+  const b = document.getElementById('bpPickBtn');
+  if(w.style.display !== 'none'){ hideBpPicker(); return; }
+  w.style.display = '';
+  b.textContent = 'Masquer la carte';
+  loadLeaflet().then(()=>{
+    if(!bpPickMap){
+      bpPickMap = L.map('bpPickMap').setView(SAINT_MALO, 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'© OpenStreetMap'}).addTo(bpPickMap);
+      bpPickMap.on('click', (e)=>{
+        bpLat = e.latlng.lat; bpLng = e.latlng.lng;
+        if(bpPickMarker) bpPickMap.removeLayer(bpPickMarker);
+        bpPickMarker = L.marker([bpLat,bpLng]).addTo(bpPickMap);
+        updateBpLocState();
+      });
+    }
+    setTimeout(()=>{
+      bpPickMap.invalidateSize();
+      if(bpLat!=null && bpLng!=null){
+        if(bpPickMarker) bpPickMap.removeLayer(bpPickMarker);
+        bpPickMarker = L.marker([bpLat,bpLng]).addTo(bpPickMap);
+        bpPickMap.setView([bpLat,bpLng], 14);
+      }
+    }, 150);
+  }).catch(()=>{
+    w.innerHTML = '<div class="bp-pick-hint">Carte indisponible. Le bon plan sera enregistré sans lieu.</div>';
+  });
+}
+
+async function saveBp(){
+  const titre = document.getElementById('bpTitre').value.trim();
+  if(!titre){toast('Indiquez un nom');return}
+  const cat  = document.getElementById('bpCat').value;
+  const desc = document.getElementById('bpDesc').value.trim();
+  let lien   = document.getElementById('bpLien').value.trim();
+  if(lien && !/^https?:\/\//i.test(lien)) lien = 'https://' + lien;
+  const who = ensureUserName() || 'Anonyme';
+  const now = new Date().toISOString();
+  if(editingBpId){
+    const i = bonsPlans.findIndex(x=>x.id===editingBpId);
+    if(i>=0) bonsPlans[i] = { ...bonsPlans[i], titre, cat, desc, lien,
+      lat:bpLat, lng:bpLng, modifiePar:who, updatedAt:now };
+  } else {
+    bonsPlans.push({ id:'bp_'+Date.now(), titre, cat, desc, lien,
+      lat:bpLat, lng:bpLng, auteur:who, createdAt:now });
+  }
+  await saveBonsPlans();
+  closeBp(); renderBonsPlans();
+  toast(editingBpId?'Bon plan modifié ✓':'Bon plan ajouté ✓');
+}
+async function deleteBp(){
+  if(!editingBpId) return;
+  const p = bonsPlans.find(x=>x.id===editingBpId);
+  if(!p) return;
+  if(!confirm('Supprimer « '+(p.titre||'ce bon plan')+' » ?')) return;
+  bonsPlans = bonsPlans.filter(x=>x.id!==editingBpId);
+  await saveBonsPlans();
+  closeBp(); renderBonsPlans();
+  toast('Bon plan supprimé');
+}
+
 // (nécessaire car le script est un module ES)
 // ══════════════════════════════
 // Enregistrement automatique : on ecoute la saisie dans les 4 champs
@@ -2677,6 +3087,16 @@ function renderInfos(){
 });
 
 window.renderInfos = renderInfos;
+window.setBpView = setBpView;
+window.setBpCatFilter = setBpCatFilter;
+window.openBpNew = openBpNew;
+window.openBpEdit = openBpEdit;
+window.closeBp = closeBp;
+window.saveBp = saveBp;
+window.deleteBp = deleteBp;
+window.toggleBpPicker = toggleBpPicker;
+window.clearBpLoc = clearBpLoc;
+window.renderBonsPlans = renderBonsPlans;
 window.exportAllData = exportAllData;
 window.changeUserName = changeUserName;
 window.quickAddPhoto = quickAddPhoto;
@@ -2721,6 +3141,9 @@ let collectorPhotos = {};            // overrides photos pour recettes Collector
 let collectorAuthors = {};           // overrides auteur pour Collector "Gourmand inconnu" : {id: 'Auteur'}
 const collectorPhotosRef = ref(fbDb, 'collector_photos');
 const collectorAuthorsRef = ref(fbDb, 'collector_authors');
+// Bons plans : stockes dans le noeud 'infos', deja autorise par les regles
+// existantes et jusqu'ici inutilise. Evite toute modification de la console.
+const infosRef = ref(fbDb, 'infos');
 let recFilter = 'all';              // 'all' | 'louli' | 'fam'
 let editingRecId = null;
 let recPhotosBuffer = [];           // photos en cours d'édition (data URL base64)
