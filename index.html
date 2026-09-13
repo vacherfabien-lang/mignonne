@@ -337,32 +337,61 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
 .legend-dot{width:11px;height:11px;border-radius:2px}
 
 /* ── LISTE ── */
-.filter-bar{margin-bottom:.7rem;display:flex;gap:.3rem;flex-wrap:wrap;align-items:center}
+/* Une seule ligne défilante : avec une vingtaine de noms, le retour à la
+   ligne occupait trois rangées et écrasait la liste elle-même. */
+.filter-bar{margin-bottom:.7rem;display:flex;gap:.35rem;align-items:center;
+  overflow-x:auto;padding-bottom:.3rem;scrollbar-width:thin}
+.filter-bar::-webkit-scrollbar{height:4px}
+.filter-bar::-webkit-scrollbar-thumb{background:var(--stone);border-radius:100px}
+.filter-bar > *{flex-shrink:0}
 .filter-label{font-size:.63rem;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;margin-right:.2rem;font-weight:600}
 .chip{background:var(--sand-light);border:1px solid var(--line-strong);padding:.22rem .65rem;border-radius:100px;font-size:.7rem;cursor:pointer;color:var(--ink-soft);display:inline-flex;align-items:center;gap:.3rem;font-family:'Inter',sans-serif}
 .chip .dot{width:6px;height:6px;border-radius:50%}
 .chip.active{background:var(--ink);color:var(--sand-light);border-color:var(--ink)}
 .list-yr-head{font-family:'Fraunces',serif;font-size:.82rem;font-style:italic;color:var(--slate);margin:1rem 0 .4rem;padding-left:.2rem}
 .list-yr-head:first-child{margin-top:.2rem}
-.list-booking{background:var(--sand-light);border:1px solid var(--line);border-left:4px solid;border-radius:3px;padding:.75rem .95rem;margin-bottom:.45rem;display:grid;grid-template-columns:auto 1fr auto;gap:.85rem;align-items:center;cursor:pointer}
+/* Une seule structure, sur mobile comme sur ordinateur : le nom en tête,
+   puis dates, nuits et réservataire sur une même ligne secondaire. */
+.list-booking{background:var(--sand-light);border:1px solid var(--line);border-left:4px solid;border-radius:3px;padding:.6rem .85rem;margin-bottom:.35rem;display:flex;align-items:flex-start;gap:.6rem;cursor:pointer}
 .list-booking.past{opacity:.52}
 .list-booking.current{background:linear-gradient(90deg,rgba(200,85,61,.10),rgba(200,85,61,.04));border-color:var(--coral);box-shadow:0 0 0 1px rgba(200,85,61,.15)}
 .list-current-badge{display:inline-block;background:var(--coral);color:white;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.15rem .5rem;border-radius:100px;margin-bottom:.3rem;font-family:'Inter',sans-serif}
-.list-date-range{font-family:'Fraunces',serif;font-size:.92rem;font-weight:500;color:var(--ink);font-style:italic}
-.list-nights{font-size:.6rem;color:var(--slate);margin-top:2px;letter-spacing:.05em;text-transform:uppercase;font-weight:600}
-.list-info{min-width:0}
-.list-name{font-weight:600;font-size:.9rem;color:var(--ink)}
-.list-meta{font-size:.72rem;color:var(--slate);margin-top:1px}
-.list-comment{font-size:.72rem;color:var(--ink-soft);margin-top:3px;font-style:italic}
-.list-edit{font-size:.95rem;color:var(--slate);padding:.3rem}
+.list-info{min-width:0;flex:1}
+.list-name{font-weight:600;font-size:.95rem;color:var(--ink);line-height:1.3}
+/* Dates, durée et réservataire tiennent sur une seule ligne secondaire,
+   séparés par des points médians. */
+.list-when{display:flex;flex-wrap:wrap;align-items:baseline;gap:.15rem .45rem;margin-top:.1rem}
+.list-when > span + span::before{content:'·';color:var(--stone);margin-right:.45rem}
+.list-date-range{font-size:.78rem;color:var(--ink-soft);font-weight:500;white-space:nowrap}
+.list-nights{font-size:.75rem;color:var(--slate);white-space:nowrap}
+.list-meta{font-size:.75rem;color:var(--slate)}
+.list-comment{font-size:.76rem;color:var(--ink-soft);margin-top:.25rem;font-style:italic;line-height:1.4}
+.list-edit{font-size:.95rem;color:var(--slate);opacity:.55;padding:.1rem .2rem;flex-shrink:0}
+.list-booking:hover .list-edit{opacity:1;color:var(--ocean)}
 .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--slate)}
 
 /* ── HISTORIQUE ── */
-.history-entry{background:var(--sand-light);border:1px solid var(--line);border-left:3px solid var(--slate);border-radius:3px;padding:.65rem .9rem;margin-bottom:.4rem}
-.history-time{font-size:.62rem;color:var(--slate);margin-bottom:.18rem;font-weight:600;letter-spacing:.04em}
-.history-action{font-size:.8rem;color:var(--ink)}
-.history-detail{font-size:.72rem;color:var(--ink-soft);font-style:italic;margin-top:.1rem}
-.history-who{display:inline-block;padding:.05rem .35rem;border-radius:2px;color:white;font-size:.65rem;font-weight:600;margin-right:.3rem;vertical-align:middle}
+/* Liste continue plutôt qu'une succession d'encadrés : la date passe en
+   en-tête de journée, chaque ligne ne porte plus que son heure. */
+.hist-day{font-family:'Fraunces',serif;font-style:italic;font-size:.85rem;color:var(--slate);
+  margin:1.1rem 0 .3rem;padding-bottom:.25rem;border-bottom:1px solid var(--stone)}
+.hist-day:first-child{margin-top:.2rem}
+.hist-row{display:flex;gap:.7rem;padding:.5rem .2rem;border-bottom:1px solid rgba(29,43,54,.06)}
+.hist-row:last-child{border-bottom:none}
+.hist-hour{font-size:.72rem;color:var(--slate);font-variant-numeric:tabular-nums;
+  flex-shrink:0;padding-top:.1rem;min-width:2.6rem}
+.hist-main{min-width:0;flex:1}
+.hist-line{font-size:.82rem;color:var(--ink);line-height:1.5}
+.hist-dates{color:var(--ink-soft)}
+.hist-dates::before{content:'·';color:var(--stone);margin:0 .35rem}
+.hist-soft{color:var(--slate)}
+.hist-soft::before{content:'·';color:var(--stone);margin:0 .35rem}
+.hist-prev{font-size:.74rem;color:var(--slate);font-style:italic;margin-top:.1rem}
+.hist-tag{display:inline-block;padding:.08rem .4rem;border-radius:100px;color:white;
+  font-size:.62rem;font-weight:700;margin-right:.35rem;vertical-align:.06em;letter-spacing:.02em}
+.hist-tag.add{background:#5b7553}
+.hist-tag.mod{background:#8b6f47}
+.hist-tag.del{background:#c8553d}
 
 /* ── STATS ONGLET ── */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
@@ -911,38 +940,15 @@ textarea.form-control{resize:vertical;min-height:62px}
   .modal-title{font-size:1.15rem}
   .form-row{gap:.4rem}
 
-  /* VUE LISTE — restructurée pour mobile : date sur sa propre ligne, plus de wrap moche */
-  .list-booking{
-    grid-template-columns:1fr auto !important;
-    gap:.3rem !important;
-    padding:.7rem .85rem;
-  }
-  .list-booking > div:first-child{
-    grid-column:1/-1;
-    display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap;
-  }
-  .list-date-range{
-    font-family:'Inter',sans-serif !important;
-    font-style:normal !important;
-    font-size:.85rem !important;
-    font-weight:600 !important;
-    white-space:nowrap;
-  }
-  .list-nights{
-    font-size:.7rem !important;
-    color:var(--slate);
-    white-space:nowrap;
-  }
-  .list-info{grid-column:1/-1}
-  .list-edit{grid-column:2;grid-row:2}
-  .list-name{font-size:.95rem}
-  .list-comment{font-size:.74rem}
+  /* La structure en flex fonctionne telle quelle sur mobile :
+     seul le crayon, devenu inutile au doigt, est masqué. */
+  .list-edit{display:none}
   .list-current-badge{font-size:.58rem;padding:.12rem .45rem}
 
   /* HISTORIQUE — limiter la longueur des dates et permettre wrap propre */
-  .history-entry{padding:.7rem .85rem}
-  .history-time{font-size:.7rem}
-  .history-detail{font-size:.85rem;line-height:1.45}
+  .hist-row{gap:.5rem;padding:.45rem .1rem}
+  .hist-hour{min-width:2.4rem;font-size:.7rem}
+  .hist-line{font-size:.82rem}
 
   /* Statistiques */
   .stats-card{padding:1rem}
@@ -1579,10 +1585,16 @@ const FERIES={
   '2026-05-08':'Victoire 1945','2026-05-14':'Ascension','2026-05-25':'Lundi de Pentecôte',
   '2026-07-14':'Fête Nationale','2026-08-15':'Assomption','2026-11-01':'Toussaint',
   '2026-11-11':'Armistice','2026-12-25':'Noël',
+  // 2027 — dates mobiles calculées depuis Pâques (28 mars 2027)
+  '2027-01-01':'Jour de l\'An','2027-03-29':'Lundi de Pâques','2027-05-01':'Fête du Travail',
+  '2027-05-06':'Ascension','2027-05-08':'Victoire 1945','2027-05-17':'Lundi de Pentecôte',
+  '2027-07-14':'Fête Nationale','2027-08-15':'Assomption','2027-11-01':'Toussaint',
+  '2027-11-11':'Armistice','2027-12-25':'Noël',
 };
 
-// Vacances scolaires 2024-2026 par zone (début inclus → fin inclus, on va jusqu'à fin+1)
-// Source : calendrier officiel Education Nationale
+// Vacances scolaires 2024-2027 par zone (début inclus → fin inclus)
+// Source : calendrier officiel Éducation nationale.
+// L'année 2026-2027 est fixée par l'arrêté du 22 octobre 2025 (JO du 23/10/2025).
 const VAC_ZONES={
   A:[
     // 2024-2025
@@ -1597,6 +1609,12 @@ const VAC_ZONES={
     {s:'2026-02-07',e:'2026-02-23',label:'Hiver'},
     {s:'2026-04-04',e:'2026-04-20',label:'Printemps'},
     {s:'2026-07-04',e:'2026-09-01',label:'Été'},
+    // 2026-2027
+    {s:'2026-10-17',e:'2026-11-02',label:'Toussaint'},
+    {s:'2026-12-19',e:'2027-01-04',label:'Noël'},
+    {s:'2027-02-13',e:'2027-03-01',label:'Hiver'},
+    {s:'2027-04-10',e:'2027-04-26',label:'Printemps'},
+    {s:'2027-07-03',e:'2027-09-02',label:'Été'},
   ],
   B:[
     {s:'2024-10-19',e:'2024-11-04',label:'Toussaint'},
@@ -1609,6 +1627,12 @@ const VAC_ZONES={
     {s:'2026-02-14',e:'2026-03-02',label:'Hiver'},
     {s:'2026-04-11',e:'2026-04-27',label:'Printemps'},
     {s:'2026-07-04',e:'2026-09-01',label:'Été'},
+    // 2026-2027
+    {s:'2026-10-17',e:'2026-11-02',label:'Toussaint'},
+    {s:'2026-12-19',e:'2027-01-04',label:'Noël'},
+    {s:'2027-02-20',e:'2027-03-08',label:'Hiver'},
+    {s:'2027-04-17',e:'2027-05-03',label:'Printemps'},
+    {s:'2027-07-03',e:'2027-09-02',label:'Été'},
   ],
   C:[
     {s:'2024-10-19',e:'2024-11-04',label:'Toussaint'},
@@ -1621,6 +1645,12 @@ const VAC_ZONES={
     {s:'2026-02-21',e:'2026-03-09',label:'Hiver'},
     {s:'2026-04-18',e:'2026-05-04',label:'Printemps'},
     {s:'2026-07-04',e:'2026-09-01',label:'Été'},
+    // 2026-2027
+    {s:'2026-10-17',e:'2026-11-02',label:'Toussaint'},
+    {s:'2026-12-19',e:'2027-01-04',label:'Noël'},
+    {s:'2027-02-06',e:'2027-02-22',label:'Hiver'},
+    {s:'2027-04-03',e:'2027-04-19',label:'Printemps'},
+    {s:'2027-07-03',e:'2027-09-02',label:'Été'},
   ],
 };
 
@@ -2607,7 +2637,15 @@ function renderList(){
       const card=document.createElement('div');card.className=cls;
       card.style.borderLeftColor=colorFor(lbl);
       const badge=current?`<div class="list-current-badge">Séjour en cours</div>`:'';
-      card.innerHTML=`<div><div class="list-date-range">${fmtS(b.start)} → ${fmtS(b.end)}</div><div class="list-nights">${n} nuit${n>1?'s':''}</div></div><div class="list-info">${badge}<div class="list-name">${esc(lbl)}</div>${resa?`<div class="list-meta">Réservé par ${esc(resa)}</div>`:''}${b.comment?`<div class="list-comment">« ${esc(b.comment)} »</div>`:''}</div><div class="list-edit">✎</div>`;
+      card.innerHTML=`<div class="list-info">`
+        + badge
+        + `<div class="list-name">${esc(lbl)}</div>`
+        + `<div class="list-when"><span class="list-date-range">${fmtS(b.start)} → ${fmtS(b.end)}</span>`
+        + `<span class="list-nights">${n} nuit${n>1?'s':''}</span>`
+        + (resa?`<span class="list-meta">réservé par ${esc(resa)}</span>`:'')
+        + `</div>`
+        + (b.comment?`<div class="list-comment">« ${esc(b.comment)} »</div>`:'')
+        + `</div><div class="list-edit">✎</div>`;
       card.onclick=()=>openEdit(b);body.appendChild(card);
     });
   });
@@ -2621,22 +2659,37 @@ function renderHistoryView(){
   const sorted=[...history].reverse();
   if(!sorted.length){body.innerHTML=`<div class="empty-state"><div style="font-size:1.8rem;opacity:.4;margin-bottom:.5rem">📋</div><div>Aucune modification enregistrée pour l'instant.</div></div>`;return}
   body.innerHTML='';
+  const p2=n=>String(n).padStart(2,'0');
+  let jourCourant='';
   sorted.forEach(h=>{
-    const el=document.createElement('div');el.className='history-entry';
-    const actionColor=h.action==='Ajout'?'#5b7553':h.action==='Suppression'?'#c8553d':'#8b6f47';
+    const d=new Date(h.ts);
+    // Un en-tête par journée : la date n'est plus répétée sur chaque ligne.
+    const cle=d.toDateString();
+    if(cle!==jourCourant){
+      jourCourant=cle;
+      const dh=document.createElement('div');
+      dh.className='hist-day';
+      dh.textContent=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      body.appendChild(dh);
+    }
+    const el=document.createElement('div');el.className='hist-row';
+    const tag=h.action==='Ajout'?'add':h.action==='Suppression'?'del':'mod';
     // Compat ancien format : si pas d'occupants, retomber sur h.name
     const occ=h.occupants||h.name||'';
     const resa=h.bookedBy||'';
     const showResa=resa && resa!==occ;
     el.innerHTML=`
-      <div class="history-time">${fmtDT(h.ts)}</div>
-      <div class="history-action">
-        <span class="history-who" style="background:${actionColor}">${h.action}</span>
-        <strong>${esc(occ)}</strong> · ${fmtS(h.start)} → ${fmtS(h.end)}${showResa?` · <span style="color:var(--slate)">réservé par ${esc(resa)}</span>`:''}
-        ${h.comment?`<span style="color:var(--slate);font-style:italic"> — ${esc(h.comment)}</span>`:''}
-      </div>
-      ${h.extra?`<div class="history-detail">${esc(h.extra)}</div>`:''}
-    `;
+      <div class="hist-hour">${p2(d.getHours())}:${p2(d.getMinutes())}</div>
+      <div class="hist-main">
+        <div class="hist-line">
+          <span class="hist-tag ${tag}">${h.action}</span>
+          <strong>${esc(occ)}</strong>
+          <span class="hist-dates">${fmtS(h.start)} → ${fmtS(h.end)}</span>
+          ${showResa?`<span class="hist-soft">réservé par ${esc(resa)}</span>`:''}
+          ${h.comment?`<span class="hist-soft">« ${esc(h.comment)} »</span>`:''}
+        </div>
+        ${h.extra?`<div class="hist-prev">${esc(h.extra)}</div>`:''}
+      </div>`;
     body.appendChild(el);
   });
 }
@@ -2992,8 +3045,15 @@ async function onQuickPhotoSelected(ev){
 // ══════════════════════════════
 // ONGLET INFOS : versions publiées et contact
 // ══════════════════════════════
-const APP_VERSION = 'v20';
+const APP_VERSION = 'v22';
 const CHANGELOG = [
+  { v:'v22', date:'13 septembre 2026', items:[
+      "Vue Liste allégée : le nom passe en tête, les dates et la durée tiennent sur une seule ligne, les filtres ne prennent plus qu'une rangée.",
+      "Historique regroupé par journée : la date n'est plus répétée à chaque ligne."
+  ]},
+  { v:'v21', date:'13 septembre 2026', items:[
+      "Jours fériés et vacances scolaires 2027 ajoutés, pour les trois zones."
+  ]},
   { v:'v20', date:'13 septembre 2026', items:[
       "La surface de l'eau s'incline d'une case à l'autre : les segments se rejoignent et dessinent une vraie houle au lieu d'un escalier."
   ]},
