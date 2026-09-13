@@ -76,6 +76,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
 .btn-add:active{background:var(--ocean-deep)}
 .btn-add .plus{font-size:1rem;line-height:1}
 .status{font-size:.72rem;color:var(--slate);font-style:italic}
+.btn-export{background:none;color:var(--ocean);border:1px solid var(--ocean);padding:.5rem .9rem;font-size:.75rem;font-weight:500;cursor:pointer;border-radius:3px;display:inline-flex;align-items:center;gap:.4rem;font-family:'Inter',sans-serif}
+.btn-export:active{background:var(--ocean);color:white}
+.btn-export[disabled]{opacity:.5;cursor:wait}
+@media(max-width:900px){.btn-export{font-size:.7rem;padding:.45rem .7rem}}
 
 /* Toggles jours fériés / vacances */
 .display-toggles{display:flex;gap:.4rem;flex-wrap:wrap;padding:.4rem 1rem;max-width:1200px;margin:0 auto}
@@ -955,6 +959,7 @@ textarea.form-control{resize:vertical;min-height:62px}
 
   <div class="toolbar">
     <button class="btn-add" onclick="startNew()"><span class="plus">+</span> Nouveau séjour</button>
+    <button class="btn-export" id="btnExport" onclick="exportAllData()" title="Télécharger une sauvegarde complète de toutes les données">💾 Exporter les données</button>
     <div class="status" id="status">Chargement…</div>
   </div>
 
@@ -1112,7 +1117,7 @@ textarea.form-control{resize:vertical;min-height:62px}
     <div class="form-group">
       <label class="form-label">Photos <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--slate);font-style:italic">(maximum 3)</span></label>
       <div class="rec-photos-edit" id="recPhotosEdit"></div>
-      <input type="file" id="recPhotoInput" accept="image/*" capture="environment" multiple style="display:none" onchange="onRecPhotoSelected(event)">
+      <input type="file" id="recPhotoInput" accept="image/*" multiple style="display:none" onchange="onRecPhotoSelected(event)">
       <button type="button" class="btn btn-secondary rec-photo-add-btn" onclick="document.getElementById('recPhotoInput').click()">📷 Ajouter une photo</button>
     </div>
     <div class="modal-actions">
@@ -1211,6 +1216,10 @@ const FAMILY_PASS = 'mignonne2026';
 
 // Statut connexion
 let isOnline = false;
+// SECURITE : tant que Firebase n'a pas repondu, on interdit toute ecriture.
+// Evite d'ecraser la vraie base par les donnees de demonstration.
+let dataReady = false;
+let listenersOn = false;
 function setConnState(ok){
   isOnline = ok;
   const s = document.getElementById('status');
@@ -1401,31 +1410,43 @@ async function load(){
     bookings = bkSnap.exists() ? parseFbCollection(bkSnap.val()) : [];
     history = hSnap.exists() ? parseFbCollection(hSnap.val()) : [];
 
-    // Si base vide, injecter les seeds
-    if(!bookings.length){
+    // Seed UNIQUEMENT si le noeud n'existe pas du tout (base neuve).
+    // Si le noeud existe mais est vide (tout supprime), on ne ressuscite rien.
+    if(!bkSnap.exists()){
       bookings = [...SEED];
+      dataReady = true;
       await saveBookings(false);
     }
+    dataReady = true;
     setConnState(true);
   }catch(e){
     console.error('Firebase load error:', e);
-    bookings = [...SEED];
+    // On n'injecte PAS les donnees de demonstration : on laisse vide
+    // et on bloque l'ecriture, pour ne rien ecraser.
+    bookings = [];
     history = [];
+    dataReady = false;
     setConnState(false);
+    toast('Connexion impossible — modifications désactivées');
   }
   updateStatus();
   render();
 
-  // Écoute temps réel : dès que quelqu'un modifie, on recharge
-  onValue(bookingsRef, (snap)=>{
-    bookings = snap.exists() ? parseFbCollection(snap.val()) : [];
-    updateStatus();render();
-  }, (err)=>{console.error('Listen bookings error:', err);setConnState(false)});
+  // Écoute temps réel : enregistrée UNE SEULE FOIS (sinon les écouteurs
+  // s'empilent à chaque sauvegarde et l'application ralentit).
+  if(!listenersOn){
+    listenersOn = true;
+    onValue(bookingsRef, (snap)=>{
+      bookings = snap.exists() ? parseFbCollection(snap.val()) : [];
+      dataReady = true;
+      updateStatus();render();
+    }, (err)=>{console.error('Listen bookings error:', err);setConnState(false)});
 
-  onValue(historyRef, (snap)=>{
-    history = snap.exists() ? parseFbCollection(snap.val()) : [];
-    renderHistoryView();
-  }, (err)=>{console.error('Listen history error:', err)});
+    onValue(historyRef, (snap)=>{
+      history = snap.exists() ? parseFbCollection(snap.val()) : [];
+      renderHistoryView();
+    }, (err)=>{console.error('Listen history error:', err)});
+  }
 }
 
 // Transforme l'objet Firebase en tableau, en filtrant les clés techniques (_pass)
@@ -1436,6 +1457,12 @@ function parseFbCollection(val){
 }
 
 async function saveBookings(notify=true){
+  // GARDE-FOU : ne jamais ecrire si la base n'a pas ete lue correctement.
+  if(!dataReady){
+    console.warn('Ecriture bloquee : donnees non chargees');
+    if(notify)toast('Modification bloquée — données non chargées. Rechargez la page.');
+    return;
+  }
   try{
     const obj = { _pass: FAMILY_PASS };
     bookings.forEach(b=>{obj[b.id]=b});
@@ -2287,8 +2314,76 @@ let tt;function toast(msg){const t=document.getElementById('toast');t.textConten
 
 // ══════════════════════════════
 // EXPOSER FONCTIONS GLOBALES
+
+// ══════════════════════════════
+// EXPORT DES DONNÉES (lecture seule — n'écrit JAMAIS dans Firebase)
+// ══════════════════════════════
+function stripPass(val){
+  // Retire la clé technique _pass et ne garde que les entrees reelles
+  if(!val || typeof val !== 'object') return {};
+  const out = {};
+  Object.keys(val).forEach(k=>{ if(!k.startsWith('_')) out[k] = val[k]; });
+  return out;
+}
+
+async function exportAllData(){
+  const btn = document.getElementById('btnExport');
+  const oldLabel = btn ? btn.textContent : '';
+  if(btn){ btn.disabled = true; btn.textContent = '⏳ Lecture en cours…'; }
+  try{
+    // Lecture seule de tous les noeuds
+    const [bkSnap, hSnap, recSnap, cpSnap, caSnap] = await Promise.all([
+      get(bookingsRef), get(historyRef), get(recettesRef),
+      get(collectorPhotosRef), get(collectorAuthorsRef)
+    ]);
+
+    const dump = {
+      _meta: {
+        application: 'Mignonne — Saint-Malo',
+        exporte_le: new Date().toISOString(),
+        format: 'sauvegarde-complete-v1',
+        note: 'Sauvegarde integrale des donnees Firebase. Conserver ce fichier.'
+      },
+      bookings:          bkSnap.exists()  ? stripPass(bkSnap.val())  : {},
+      history:           hSnap.exists()   ? stripPass(hSnap.val())   : {},
+      recettes:          recSnap.exists() ? stripPass(recSnap.val()) : {},
+      collector_photos:  cpSnap.exists()  ? stripPass(cpSnap.val())  : {},
+      collector_authors: caSnap.exists()  ? stripPass(caSnap.val())  : {}
+    };
+
+    const nb = {
+      sejours:  Object.keys(dump.bookings).length,
+      histo:    Object.keys(dump.history).length,
+      recettes: Object.keys(dump.recettes).length,
+      photos:   Object.keys(dump.collector_photos).length
+    };
+    dump._meta.contenu = nb;
+
+    const json = JSON.stringify(dump, null, 2);
+    const blob = new Blob([json], {type:'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const d    = new Date();
+    const pad  = n => String(n).padStart(2,'0');
+    const nom  = 'mignonne-sauvegarde-' + d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) + '-' + pad(d.getHours()) + pad(d.getMinutes()) + '.json';
+
+    const a = document.createElement('a');
+    a.href = url; a.download = nom;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 2000);
+
+    const ko = Math.round(json.length/1024);
+    toast('Sauvegarde : ' + nb.sejours + ' sejours, ' + nb.recettes + ' recettes (' + ko + ' Ko)');
+  }catch(e){
+    console.error('Export error:', e);
+    toast('Export impossible — verifiez votre connexion');
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = oldLabel || '💾 Exporter les données'; }
+  }
+}
+
 // (nécessaire car le script est un module ES)
 // ══════════════════════════════
+window.exportAllData = exportAllData;
 window.startNew = startNew;
 window.toggleFerie = toggleFerie;
 window.toggleVac = toggleVac;
