@@ -187,11 +187,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
   height:24px;
   font-size:.78rem;
 }
-/* Numéro plus grand en vue Mois */
+/* Numéro plus grand en vue Mois : c'est l'information principale de la
+   case, il doit dominer visuellement la pastille de marée. */
 .cal-grid.big .day-num-sm{
-  font-size:.8rem;
+  font-size:.92rem;
+  font-weight:600;
   opacity:1;
-  color:var(--ink-soft);
+  color:var(--ink);
 }
 .cal-grid.big .cal-cell{padding:5px 7px}
 
@@ -233,25 +235,28 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--sand);color:var(-
    largeur, comme une ligne d'eau, et sa ligne de crête dessine la houle
    d'un jour à l'autre. Il passe sous les bandeaux de séjour, qui restent
    lisibles, et ne dispute plus le bas de la cellule à personne. */
-.cal-cell .tide-fill{
-  position:absolute;left:0;right:0;bottom:0;
-  background:linear-gradient(to top, rgba(127,168,189,.42), rgba(127,168,189,.16));
-  border-top:2px solid rgba(90,139,160,.6);
-  pointer-events:none;
+.cal-cell .tide-wrap{position:absolute;inset:0;pointer-events:none;z-index:0}
+.cal-cell .tide-svg{display:block;width:100%;height:100%}
+/* La crête garde une épaisseur constante malgré l'étirement du viewBox */
+.tide-crest{
+  fill:none;stroke:rgba(90,139,160,.75);stroke-width:2;
+  vector-effect:non-scaling-stroke;stroke-linecap:square;
 }
-/* Grandes marées : même bleu, ligne d'eau plus affirmée */
-.cal-cell .tide-fill.fort{
-  background:linear-gradient(to top, rgba(77,127,155,.5), rgba(77,127,155,.2));
-  border-top-color:rgba(45,95,124,.9);
-}
-/* Coefficient en haut à droite : le numéro du jour est à gauche,
-   les bandeaux sont en bas. Ce coin est le seul jamais disputé. */
+.tide-crest.fort{stroke:rgba(45,95,124,.95);stroke-width:2.5}
+/* Le contenu de la case doit rester au-dessus de l'eau */
+.cal-cell .day-num-sm{position:relative;z-index:1}
+/* Coefficient : présenté en PASTILLE et non en nombre nu. Sans cela, deux
+   nombres de taille voisine cohabitent en haut de la case et l'œil ne sait
+   plus lequel est la date. La forme arrondie, le fond plein et la taille
+   réduite le distinguent immédiatement du numéro du jour. */
 .cal-cell .tide-num{
-  position:absolute;top:3px;right:5px;z-index:2;
-  font-family:'Inter',sans-serif;font-size:.66rem;font-weight:600;
-  color:#4d7f9b;line-height:1;pointer-events:none;letter-spacing:-.02em;
+  position:absolute;top:4px;right:4px;z-index:2;
+  font-family:'Inter',sans-serif;font-size:.56rem;font-weight:700;
+  background:#3f7089;color:#fff;                 /* contraste 5,40:1 */
+  padding:1px 4px 2px;border-radius:100px;
+  line-height:1.15;pointer-events:none;letter-spacing:0;
 }
-.cal-cell .tide-num.fort{color:#2d5f7c;font-weight:800}
+.cal-cell .tide-num.fort{background:#2d5f7c}     /* contraste 6,91:1 */
 /* Vue Année : cellules trop petites pour du texte, on garde la houle seule */
 .cal-grid:not(.big) .cal-cell .tide-num{display:none}
 
@@ -893,7 +898,7 @@ textarea.form-control{resize:vertical;min-height:62px}
   .cal-grid.big + .cal-bands .cal-band{font-size:.7rem;height:22px}
 
   /* Coef marée */
-  .cal-grid.big .cal-cell .tide-num{font-size:.62rem;top:2px;right:3px}
+  .cal-grid.big .cal-cell .tide-num{font-size:.54rem;top:3px;right:3px}
 
   /* Sticky header */
   .sticky-header{padding-bottom:.2rem}
@@ -1393,6 +1398,17 @@ textarea.form-control{resize:vertical;min-height:62px}
   </div>
 </div>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="tideGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="rgba(127,168,189,.16)"/>
+    <stop offset="100%" stop-color="rgba(127,168,189,.45)"/>
+  </linearGradient>
+  <linearGradient id="tideGradFort" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="rgba(77,127,155,.2)"/>
+    <stop offset="100%" stop-color="rgba(77,127,155,.55)"/>
+  </linearGradient>
+</defs></svg>
+
 <div id="verTag" class="ver-tag" title="Version chargée — touchez pour forcer la mise à jour" onclick="forceReload()">—</div>
 
 <input type="file" id="quickPhotoInput" accept="image/*" multiple style="display:none" onchange="onQuickPhotoSelected(event)">
@@ -1628,12 +1644,34 @@ function tideClass(coef){
 function tideLabel(coef){ return coef==null ? '' : ('coef '+coef); }
 // Hauteur de la barre de maree : les coefficients vont de 20 a ~120.
 // Barres verticales cote a cote : leur sommet dessine la houle du mois.
-// Niveau d'eau de la cellule : proportionnel au coefficient (20 a 120).
+// Niveau d'eau de la cellule, en pourcentage de sa hauteur.
 // Plafonne a 78 % pour ne jamais noyer le numero du jour, en haut.
-function tideWidth(coef){
-  if(coef==null) return '0%';
+function tideLevel(coef){
+  if(coef==null) return null;
   const pct = ((coef - 20) / 100) * 78;
-  return Math.max(5, Math.min(78, pct)).toFixed(1) + '%';
+  return Math.max(5, Math.min(78, pct));
+}
+
+// Surface de l'eau inclinee : le bord gauche rejoint la veille a mi-hauteur,
+// le bord droit rejoint le lendemain. Le milieu reste au niveau reel du jour.
+// Les segments se touchent donc d'une case a l'autre : plus d'escalier,
+// une ligne continue qui dessine la houle.
+function tideSvg(iso, coef){
+  const own = tideLevel(coef);
+  if(own == null) return '';
+  const lv = tideLevel(getTide(addD(iso,-1)));
+  const nv = tideLevel(getTide(addD(iso, 1)));
+  const gauche = (lv == null) ? own : (lv + own) / 2;
+  const droite = (nv == null) ? own : (own + nv) / 2;
+  const yG = (100 - gauche).toFixed(2);
+  const yD = (100 - droite).toFixed(2);
+  const fort = coef >= mareeMin;
+  return '<svg class="tide-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'
+       + '<polygon points="0,' + yG + ' 100,' + yD + ' 100,100 0,100" fill="url(#'
+       + (fort ? 'tideGradFort' : 'tideGrad') + ')"/>'
+       + '<line class="tide-crest' + (fort ? ' fort' : '') + '" x1="0" y1="' + yG
+       + '" x2="100" y2="' + yD + '"/>'
+       + '</svg>';
 }
 
 const SEED=[
@@ -2118,9 +2156,9 @@ function renderYear(){
         const tY=getTide(iso);
         if(tY!=null){
           const tb=document.createElement('div');
-          tb.className='tide-fill'+(tY>=mareeMin?' fort':'');
-          tb.style.height=tideWidth(tY);
-          cell.appendChild(tb);
+          tb.className='tide-wrap';
+          tb.innerHTML=tideSvg(iso,tY);
+          cell.insertBefore(tb, cell.firstChild);
           const tn=document.createElement('div');
           tn.className='tide-num'+(tY>=mareeMin?' fort':'');
           tn.textContent=tY;
@@ -2350,9 +2388,9 @@ function renderMonth(){
     // Marées : jauge systématique, chiffre uniquement sur les marées notables
     if(showMaree && coef!=null){
       const tb=document.createElement('div');
-      tb.className='tide-fill'+(coef>=mareeMin?' fort':'');
-      tb.style.height=tideWidth(coef);
-      cell.appendChild(tb);
+      tb.className='tide-wrap';
+      tb.innerHTML=tideSvg(iso,coef);
+      cell.insertBefore(tb, cell.firstChild);
       const tn=document.createElement('div');
       tn.className='tide-num'+(coef>=mareeMin?' fort':'');
       tn.textContent=coef;
@@ -2954,8 +2992,14 @@ async function onQuickPhotoSelected(ev){
 // ══════════════════════════════
 // ONGLET INFOS : versions publiées et contact
 // ══════════════════════════════
-const APP_VERSION = 'v18';
+const APP_VERSION = 'v20';
 const CHANGELOG = [
+  { v:'v20', date:'13 septembre 2026', items:[
+      "La surface de l'eau s'incline d'une case à l'autre : les segments se rejoignent et dessinent une vraie houle au lieu d'un escalier."
+  ]},
+  { v:'v19', date:'13 septembre 2026', items:[
+      "Vue Mois : le coefficient de marée devient une pastille bleue et le numéro du jour est agrandi. On ne confond plus les deux nombres."
+  ]},
   { v:'v18', date:'13 septembre 2026', items:[
       "Correction : un clic sur un bouton pendant le chargement provoquait une erreur. L'application répond maintenant « Chargement en cours » au lieu de ne rien faire."
   ]},
